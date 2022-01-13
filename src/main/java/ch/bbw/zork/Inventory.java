@@ -10,10 +10,9 @@ public class Inventory {
     public void showInventory(){
         System.out.println("+---------------+----------------------------------------------------+");
         System.out.println("|   Item Name   |                 Item Description                   |");
-//        System.out.println("+---------------+----------------------------------------------------+");
+        System.out.println("+---------------+----------------------------------------------------+");
 
         for (Item item : backpack.values()){
-            System.out.println("+---------------+----------------------------------------------------+");
             System.out.format("| %-13s | %-50s |%n", item.getName(), item.getDescription());
         }
         System.out.println("+---------------+----------------------------------------------------+");
