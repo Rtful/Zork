@@ -4,17 +4,20 @@ import java.util.HashMap;
 
 public class Inventory {
 
-    public HashMap<Integer, Object> backpack = new HashMap<Integer, Object>();
+    public HashMap<String, Item> backpack = new HashMap<String, Item>();
 
 
     public void showInventory(){
-        System.out.println("+----+--------------------+");
-        System.out.println("| ID |     Item Name      |");
-        System.out.println("+----+--------------------+");
-        System.out.format("| %-2d |%-20s|%n", 25, "backpack3");
-        System.out.format("| %-2d |%-20s|%n", 25, "backpack3");
-        System.out.format("| %-2d |%-20s|%n", 25, "backpack3");
-        System.out.println("+----+--------------------+");
+        System.out.println("+---------------+----------------------------------------------------+");
+        System.out.println("|   Item Name   |                 Item Description                   |");
+//        System.out.println("+---------------+----------------------------------------------------+");
+
+        for (Item item : backpack.values()){
+            System.out.println("+---------------+----------------------------------------------------+");
+            System.out.format("| %-13s | %-50s |%n", item.getName(), item.getDescription());
+        }
+        System.out.println("+---------------+----------------------------------------------------+");
+        System.out.println("Entries:" + backpack.size());
     }
 
 }
