@@ -1,5 +1,9 @@
 package ch.bbw.zork;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.HashMap;
 
@@ -19,8 +23,7 @@ public class Game {
 
 	HashMap<String, Item> allItems = new HashMap<String, Item>();
 
-	public Game() {
-
+	public Game() throws IOException {
 		parser = new Parser(System.in);
 
 		inventory = new Inventory();
@@ -31,17 +34,21 @@ public class Game {
 		apartment2 = new Room("the G Block");
 		hallway = new Room("an eerie partially lit hallway");
 
-		PointOfInterest painting = new PointOfInterest("A painting of the mona lisa", "north wall");
+		Image monaLisaASCII = new Image("img/monaLisa.txt");
+		Image waveASCII = new Image("img/wave.txt");
+
+		PointOfInterest monaLisa = new PointOfInterest(monaLisaASCII.getImage(), "north wall");
+		PointOfInterest wave = new PointOfInterest(waveASCII.getImage(), "north wall");
 
 		bedroom.setExits(null, hallway, null, null);
-		lab.setExits(null, null, null, bedroom);
-		apartment1.setExits(null, bedroom, null, null);
-		apartment2.setExits(bedroom, hallway, null, null);
-		hallway.setExits(null, lab, null, apartment2);
-		hallway.addPointsOfInterest("painting", painting);
-		hallway.addPointsOfInterest("photo", painting);
+		lab.setExits(null, null, null, hallway);
+		apartment1.setExits(null, null, hallway, null);
+		apartment2.setExits(hallway, null, null, null);
+		hallway.setExits(apartment1, lab, apartment2, apartment2);
+		hallway.addPointsOfInterest("vertical_painting", monaLisa);
+		hallway.addPointsOfInterest("horizontal_painting", wave);
 
-		currentRoom = bedroom; // start game outside
+		currentRoom = bedroom; // start game in bedroom
 
 		Item key = new Item("Key", "Just an old rusty key");
 		Item coin = new Item("Coin", "An ancient looking coin");
