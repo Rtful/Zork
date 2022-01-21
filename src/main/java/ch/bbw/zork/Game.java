@@ -1,10 +1,6 @@
 package ch.bbw.zork;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.*;
 import java.util.HashMap;
 
 /**
@@ -66,7 +62,7 @@ public class Game {
 	/**
 	 *  Main play routine.  Loops until end of play.
 	 */
-	public void play() {
+	public void play() throws IOException {
 		printWelcome();
 
 		// Enter the main command loop.  Here we repeatedly read commands and
@@ -85,7 +81,7 @@ public class Game {
 		System.out.println("Zork is a simple adventure game.");
 		System.out.println("Type 'help' if you need help.");
 		System.out.println();
-		System.out.println(currentRoom.longDescription());
+		System.out.println(currentRoom.getLongDescription());
 	}
 
 	private boolean processCommand(Command command) {
@@ -179,7 +175,7 @@ public class Game {
 				System.out.println("There is no door!");
 			else {
 				currentRoom = nextRoom;
-				System.out.println(currentRoom.longDescription());
+				System.out.println(currentRoom.getLongDescription());
 			}
 		}
 	}
