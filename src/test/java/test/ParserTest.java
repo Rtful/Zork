@@ -15,8 +15,8 @@ public class ParserTest {
     Parser parser;
 
     @Test
-    public void testGetCommandSingleWord() throws IOException {
-        byte[] data = "look".getBytes();
+    public void testGetCommandSingleWord() {
+        byte[]      data  = "look".getBytes();
         InputStream input = new ByteArrayInputStream(data);
         parser = new Parser(input);
         Command command = parser.getCommand();
@@ -25,8 +25,8 @@ public class ParserTest {
     }
 
     @Test
-    public void testGetCommandTwoWords() throws IOException {
-        byte[] data = "go east".getBytes();
+    public void testGetCommandTwoWords() {
+        byte[]      data  = "go east".getBytes();
         InputStream input = new ByteArrayInputStream(data);
         parser = new Parser(input);
         Command command = parser.getCommand();
@@ -36,31 +36,26 @@ public class ParserTest {
 
     @Test
     public void testGetCommandMultiWords() {
-        byte[] data = "go too long".getBytes();
+        byte[]      data  = "go too long".getBytes();
         InputStream input = new ByteArrayInputStream(data);
         parser = new Parser(input);
-
-        assertThrows(IllegalArgumentException.class, () -> {
-            parser.getCommand();
-        });
+        assertNull(parser.getCommand());
     }
 
     @Test
     public void testGetCommandNull() {
-        byte[] data = "".getBytes();
+        byte[]      data  = "".getBytes();
         InputStream input = new ByteArrayInputStream(data);
         parser = new Parser(input);
 
-        assertThrows(NullPointerException.class, () -> {
-            parser.getCommand();
-        });
+        assertThrows(NullPointerException.class, () -> parser.getCommand());
     }
 
     @Test
     public void testShowCommands() {
-        byte[] data = "".getBytes();
+        byte[]       data         = "".getBytes();
         CommandWords commandWords = new CommandWords();
-        InputStream input = new ByteArrayInputStream(data);
+        InputStream  input        = new ByteArrayInputStream(data);
         parser = new Parser(input);
         String expected = commandWords.showAll();
 

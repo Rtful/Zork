@@ -1,38 +1,42 @@
 package test;
+import ch.bbw.zork.Door;
 import ch.bbw.zork.PointOfInterest;
 import ch.bbw.zork.Room;
 import org.junit.jupiter.api.Test;
+
+import java.util.HashMap;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class RoomTest {
     private Room room;
-    Room north = new Room("northDescription");
-    Room south = new Room("southDescription");
-    Room east = new Room("eastDescription");
-    Room west = new Room("westDescription");
+    Door north = new Door(null);
+    Door south = new Door(null);
+    Door east = new Door(null);
+    Door west = new Door(null);
 
     @Test
     public void testAddPointsOfInterest(){
         room = new Room("testDescription");
         PointOfInterest pointOfInterest = new PointOfInterest("testName", "testLocation");
-        room.addPointsOfInterest("testName", pointOfInterest);
+        room.addPointOfInterest("testName", pointOfInterest);
         assertTrue(room.getPointsOfInterest().containsKey("testName"));
     }
     @Test
     public void testSetExits(){
         room = new Room("testDescription");
         room.setExits(north, east, south, west);
-        assertSame(room.nextRoom("north"), north);
-        assertSame(room.nextRoom("east"), east);
-        assertSame(room.nextRoom("south"), south);
-        assertSame(room.nextRoom("west"), west);
+        assertSame(room.getExit("north"), north);
+        assertSame(room.getExit("east"), east);
+        assertSame(room.getExit("south"), south);
+        assertSame(room.getExit("west"), west);
     }
 
     @Test
     public void testInspect() {
         room = new Room("testDescription");
         PointOfInterest pointOfInterest = new PointOfInterest("testDescription", "testLocation");
-        room.addPointsOfInterest("testName", pointOfInterest);
+        room.addPointOfInterest("testName", pointOfInterest);
         String description = room.inspect("testName");
         assertInstanceOf(String.class, description);
         assertEquals("testDescription", description);
@@ -57,21 +61,31 @@ public class RoomTest {
     }
 
     @Test
+    public void testPointOfInterest(){
+        room = new Room("testDescription");
+        PointOfInterest pointOfInterest = new PointOfInterest("testDescription", "testLocation");
+        room.addPointOfInterest("testName", pointOfInterest);
+        HashMap<String, PointOfInterest> pointsOfInterest = room.getPointsOfInterest();
+        assertTrue(pointsOfInterest.containsKey("testName"));
+        assertEquals("testDescription", room.inspect("testName"));
+    }
+
+    @Test
     public void testNextRoom(){
         room = new Room("testDescription");
         room.setExits(north, east, south, west);
-        assertEquals(north, room.nextRoom("north"));
-        assertEquals(east, room.nextRoom("east"));
-        assertEquals(south, room.nextRoom("south"));
-        assertEquals(west, room.nextRoom("west"));
+        assertEquals(north, room.getExit("north"));
+        assertEquals(east, room.getExit("east"));
+        assertEquals(south, room.getExit("south"));
+        assertEquals(west, room.getExit("west"));
     }
 
     @Test
     public void testNextRoomNull(){
         room = new Room("testDescription");
-        assertNull(room.nextRoom("north"));
-        assertNull(room.nextRoom("east"));
-        assertNull(room.nextRoom("south"));
-        assertNull(room.nextRoom("west"));
+        assertNull(room.getExit("north"));
+        assertNull(room.getExit("east"));
+        assertNull(room.getExit("south"));
+        assertNull(room.getExit("west"));
     }
 }
