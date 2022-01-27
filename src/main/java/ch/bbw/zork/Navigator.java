@@ -17,6 +17,15 @@ public class Navigator {
         x = 0;
         y = 1;
 
+        /* TODO: Put items in the correct rooms' container
+
+        Item key     = new Item("Key", "Just an old rusty key");
+        Item coin    = new Item("Coin", "An ancient looking coin");
+        Item knife   = new Item("Knife", "An old rusty blade");
+        Item picture = new Item("Picture", "Polaroid of someone from your past");
+
+        * */
+
         Room reception = new Room("the reception", false);
         Room lab       = new Room("lab, where some experiments had taken place", false);
         Room office    = new Room("big shared office", false);
@@ -65,6 +74,10 @@ public class Navigator {
 
     public void look() {
         rooms[this.x][this.y].look();
+    }
+
+    public Room getRooms(){
+        return rooms[this.x][this.y];
     }
 
     public void inspect(Command command) {

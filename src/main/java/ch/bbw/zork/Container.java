@@ -1,13 +1,11 @@
 package ch.bbw.zork;
 
+/*
+ * author: Loris Hütter, Januar 2022
+ */
+
 import java.util.HashMap;
 
 public class Container {
-
-    private HashMap<Item, Room> items;
-
-    public Container(){
-        this.items = new HashMap<>();
-    }
 
 }

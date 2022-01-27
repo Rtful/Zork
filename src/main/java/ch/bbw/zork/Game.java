@@ -18,28 +18,18 @@ public class Game {
     private Inventory inventory;
     private final Navigator navigator;
 
-    HashMap<String, Item> allItems = new HashMap<>();
-
     public Game() throws IOException {
 
         Date      date      = new Date();
         this.inventory = new Inventory();
         this.parser = new Parser(System.in);
         this.navigator = new Navigator();
+    }
 
-        Item key     = new Item("Key", "Just an old rusty key");
-        Item coin    = new Item("Coin", "An ancient looking coin");
-        Item knife   = new Item("Knife", "An old rusty blade");
-        Item picture = new Item("Picture", "Polaroid of someone from your past");
-
-        allItems.put("key", key);
-        allItems.put("coin", coin);
-        allItems.put("knife", knife);
-        allItems.put("picture", picture);   
-    } 
     /**
      * Main play routine.  Loops until end of play.
      */
+
     public void play() {
 
         printWelcome();
@@ -93,8 +83,9 @@ public class Game {
             case "look":
                 this.navigator.look();
                 break;
-            case "map":
-                map();
+            case "drop":
+                dropItem(command);
+                break;
             case "inspect":
                 navigator.inspect(command);
                 break;
@@ -122,9 +113,6 @@ public class Game {
         inventory.showInventory();
     }
 
-	private void map(){
-		System.out.println("Map");
-	}
 
 	private void takeItem(Command command) {
 
@@ -132,34 +120,29 @@ public class Game {
 			System.out.println("Take what?");
 		} else {
 			String takenItem = command.getSecondWord();
-			if (allItems.containsKey(takenItem)) {
+			if (navigator.getRooms().getContainer().containsKey(takenItem)) {
 				System.out.println("\nPicked up" + takenItem + "\n");
-				inventory.backpack.put(takenItem, allItems.get(takenItem));
-				allItems.remove(takenItem);
+				inventory.backpack.put(takenItem, navigator.getRooms().getContainer().get(takenItem));
+				navigator.getRooms().getContainer().remove(takenItem);
 			} else {
 				System.out.println("I can't take that");
 			}
 		}
 	}
 
-	/* TODO: make item drop in a room in a container
-	private void dropItem(Command command){
-		if (!command.hasSecondWord()) {
-			System.out.println("Drop what?");
-		} else {
-			String droppedItem = command.getSecondWord();
-			if (currentRoom.getContainer()){
-				if(inventory.backpack.containsKey(droppedItem)){
-					container.put(droppedItem, inventory.backpack.get(droppedItem));
-					inventory.backpack.remove(droppedItem);
-				} else {
-					System.out.println("I don't have that");
-				}
-			} else {
-				System.out.println("You can't drop any Items here, go to the room with the container to drop Items");
-			}
-		}
-	}*/
+	private void dropItem(Command command) {
+        if (!command.hasSecondWord()) {
+            System.out.println("Drop what?");
+        } else {
+            String droppedItem = command.getSecondWord();
+            if (inventory.backpack.containsKey(droppedItem)) {
+                navigator.getRooms().addContainer(droppedItem, inventory.backpack.get(droppedItem));
+                inventory.backpack.remove(droppedItem);
+            } else {
+                System.out.println("I don't have that");
+            }
+        }
+    }
 
 	private void checkSomething(Command command) {
 

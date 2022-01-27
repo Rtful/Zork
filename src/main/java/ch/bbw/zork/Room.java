@@ -13,19 +13,22 @@ public class Room {
 
 	private final String description;
 	private final HashMap<String, PointOfInterest> pointsOfInterest;
+	private final HashMap<String, Item> containers;
 	private final HashMap<String, Door> exits;
-	private Boolean container;
 
 	public Room(String description, Boolean container) {
 		this.description = description;
 		this.exits = new HashMap<>();
 		this.pointsOfInterest = new HashMap<>();
-		this.container = container;
-
+		this.containers = new HashMap<>();
 	}
 
 	public void addPointOfInterest(String name, PointOfInterest pointOfInterest) {
 		pointsOfInterest.put(name, pointOfInterest);
+	}
+
+	public void addContainer(String name, Item item) {
+		containers.put(name, item);
 	}
 
 	public HashMap<String, PointOfInterest> getPointsOfInterest() {
@@ -48,8 +51,8 @@ public class Room {
 		return "You are in " + description + ".\n" + "Exits:" + String.join(" ", exits.keySet());
 	}
 
-	public Boolean getContainer() {
-		return container;
+	public HashMap<String, Item> getContainer() {
+		return containers;
 	}
 
 	public void look() {
