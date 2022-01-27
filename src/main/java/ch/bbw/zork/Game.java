@@ -30,7 +30,7 @@ public class Game {
     /**
      * Main play routine.  Loops until end of play.
      */
-    public void play() {
+    public void play() throws IOException {
 
         printWelcome();
 
@@ -59,7 +59,7 @@ public class Game {
         System.out.println(this.world.getLongDescription());
     }
 
-        private boolean processCommand(Command command) {
+        private boolean processCommand(Command command) throws IOException {
         if (command.isUnknown()) {
             System.out.println("I don't know what you mean...");
             return false;
@@ -151,7 +151,7 @@ public class Game {
         }
     }
 
-	private void checkSomething(Command command) {
+	private void checkSomething(Command command) throws IOException {
 
 		if (!command.hasSecondWord()) {
 			System.out.println("Check what?");
