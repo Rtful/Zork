@@ -13,7 +13,7 @@ public class CommandWords {
     private final Map<String, String> validCommands;
 
     public CommandWords() {
-        this.validCommands = new HashMap<String, String>(Map.of(
+        this.validCommands = new HashMap<>(Map.of(
                 "go", "leave the current room in the desired direction (north, east, south, west)",
                 "quit", "quit the game",
                 "help", "get useful tips",

@@ -11,26 +11,29 @@ import java.util.Objects;
 
 public class Room {
 
-    private final String description;
-    private final HashMap<String, PointOfInterest> pointsOfInterest;
-    private final HashMap<String, Door> exits;
-    private Boolean container;
+	private final String description;
+	private final HashMap<String, PointOfInterest> pointsOfInterest;
+	private final HashMap<String, Item> containers;
+	private final HashMap<String, Door> exits;
 
-    public Room(String description, Boolean container) {
-        this.description = description;
-        this.exits = new HashMap<>();
-        this.pointsOfInterest = new HashMap<>();
-        this.container = container;
-
-    }
+	public Room(String description, Boolean container) {
+		this.description = description;
+		this.exits = new HashMap<>();
+		this.pointsOfInterest = new HashMap<>();
+		this.containers = new HashMap<>();
+	}
 
     public void addPointOfInterest(String name, PointOfInterest pointOfInterest) {
         pointsOfInterest.put(name, pointOfInterest);
     }
 
-    public HashMap<String, PointOfInterest> getPointsOfInterest() {
-        return pointsOfInterest;
-    }
+	public void addContainer(String name, Item item) {
+		containers.put(name, item);
+	}
+
+	public HashMap<String, PointOfInterest> getPointsOfInterest() {
+		return pointsOfInterest;
+	}
 
     public void setExits(Door north, Door east, Door south, Door west) {
         exits.put("north", north);
@@ -48,9 +51,9 @@ public class Room {
         return "You are in " + description + ".\n" + "Exits:" + String.join(" ", exits.keySet());
     }
 
-    public Boolean getContainer() {
-        return container;
-    }
+	public HashMap<String, Item> getContainer() {
+		return containers;
+	}
 
     public void look() {
         System.out.println("You look around. You see:\n" + exits.size() + " exits: " + String.join(", ", exits.keySet()));

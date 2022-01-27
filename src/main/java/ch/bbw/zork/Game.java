@@ -18,7 +18,7 @@ public class Game {
     private final World world;
     private final Scanner scanner;
 
-    HashMap<String, Item> allItems = new HashMap<>();
+    WorldMap worldMap = new WorldMap();
 
     public Game() throws IOException {
         this.scanner = new Scanner(System.in);
@@ -26,17 +26,6 @@ public class Game {
         this.inventory = new Inventory();
         this.parser = new Parser(this.scanner);
         this.world = new World(this.scanner);
-
-        Item key     = new Item("Key", "Just an old rusty key");
-        Item coin    = new Item("Coin", "An ancient looking coin");
-        Item knife   = new Item("Knife", "An old rusty blade");
-        Item picture = new Item("Picture", "Polaroid of someone from your past");
-
-        this.allItems.put("key", key);
-        this.allItems.put("coin", coin);
-        this.allItems.put("knife", knife);
-        this.allItems.put("picture", picture);
-    } 
     /**
      * Main play routine.  Loops until end of play.
      */
@@ -66,7 +55,7 @@ public class Game {
         System.out.println("Zork is a simple adventure game.");
         System.out.println("Type 'help' if you need help.");
         System.out.println();
-        System.out.println(this.world.getLongDescription());
+        System.out.println(this.navigator.getLongDescription());
     }
 
         private boolean processCommand(Command command) {
@@ -82,11 +71,7 @@ public class Game {
                 printHelp();
                 break;
             case "go":
-                if (command.hasSecondWord()) {
-                    world.go(command.getSecondWord());
-                } else {
-                    System.out.println("Please specify where you want to go");
-                }
+                navigator.go(command.getSecondWord());
                 break;
             case "check":
                 checkSomething(command);
@@ -97,8 +82,9 @@ public class Game {
             case "look":
                 this.world.look();
                 break;
-            case "map":
-                map();
+            case "drop":
+                dropItem(command);
+                break;
             case "inspect":
                 world.inspect(command);
                 break;
@@ -133,25 +119,36 @@ public class Game {
         inventory.showInventory();
     }
 
-	private void map(){
-		System.out.println("Map");
-	}
 
 	private void takeItem(Command command) {
 
 		if (!command.hasSecondWord()) {
 			System.out.println("Take what?");
 		} else {
-			String requestedItem = command.getSecondWord();
-            Item takenItem = this.world.takeItem(requestedItem);
-            if (takenItem != null) {
-				this.inventory.backpack.put(requestedItem, takenItem);
-                System.out.println("Picked up " + requestedItem);
-            } else {
+			String takenItem = command.getSecondWord();
+			if (navigator.getRooms().getContainer().containsKey(takenItem)) {
+				System.out.println("\nPicked up" + takenItem + "\n");
+				inventory.backpack.put(takenItem, navigator.getRooms().getContainer().get(takenItem));
+				navigator.getRooms().getContainer().remove(takenItem);
+			} else {
 				System.out.println("I can't take that");
 			}
 		}
 	}
+
+	private void dropItem(Command command) {
+        if (!command.hasSecondWord()) {
+            System.out.println("Drop what?");
+        } else {
+            String droppedItem = command.getSecondWord();
+            if (inventory.backpack.containsKey(droppedItem)) {
+                navigator.getRooms().addContainer(droppedItem, inventory.backpack.get(droppedItem));
+                inventory.backpack.remove(droppedItem);
+            } else {
+                System.out.println("I don't have that");
+            }
+        }
+    }
 
 	private void checkSomething(Command command) {
 
@@ -160,7 +157,9 @@ public class Game {
 		} else {
 			String checking = command.getSecondWord();
 			if (checking.equals("backpack")) {
-				inventory.showInventory();
+                inventory.showInventory();
+            } else if (checking.equals("map")) {
+                worldMap.showMap();
 			} else {
 				System.out.println("I don't know how to check that");
 			}

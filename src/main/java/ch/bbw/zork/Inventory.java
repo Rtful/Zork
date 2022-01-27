@@ -1,10 +1,14 @@
 package ch.bbw.zork;
 
+/*
+ * author: Loris Hütter, Januar 2022
+ */
+
 import java.util.HashMap;
 
 public class Inventory {
 
-    public HashMap<String, Item> backpack = new HashMap<String, Item>();
+    public HashMap<String, Item> backpack = new HashMap<>();
 
 
     public void showInventory(){
