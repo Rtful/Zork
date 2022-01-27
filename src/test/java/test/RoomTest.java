@@ -17,14 +17,14 @@ public class RoomTest {
 
     @Test
     public void testAddPointsOfInterest(){
-        room = new Room("testDescription", false);
+        room = new Room("testName", "testDescription", false);
         PointOfInterest pointOfInterest = new PointOfInterest("testName", "testLocation");
         room.addPointOfInterest("testName", pointOfInterest);
         assertTrue(room.getPointsOfInterest().containsKey("testName"));
     }
     @Test
     public void testSetExits(){
-        room = new Room("testDescription", false);
+        room = new Room("testName", "testDescription", false);
         room.setExits(north, east, south, west);
         assertSame(room.getExit("north"), north);
         assertSame(room.getExit("east"), east);
@@ -34,7 +34,7 @@ public class RoomTest {
 
     @Test
     public void testInspect() {
-        room = new Room("testDescription", false);
+        room = new Room("testName", "testDescription", false);
         PointOfInterest pointOfInterest = new PointOfInterest("testDescription", "testLocation");
         room.addPointOfInterest("testName", pointOfInterest);
         String description = room.inspect("testName");
@@ -44,7 +44,7 @@ public class RoomTest {
 
     @Test
     public void testInspectNull() {
-        room = new Room("testDescription", false);
+        room = new Room("testName", "testDescription", false);
         PointOfInterest pointOfInterest = new PointOfInterest("testDescription", "testLocation");
         String description = room.inspect("testName");
         assertNull(description);
@@ -52,7 +52,7 @@ public class RoomTest {
 
     @Test
     public void testgetLongDescription(){
-        room = new Room("testDescription", false);
+        room = new Room("testName", "testDescription", false);
         room.setExits(north, null, null, west);
         String description = room.getLongDescription();
         assertTrue(description.contains("testDescription"));
@@ -62,7 +62,7 @@ public class RoomTest {
 
     @Test
     public void testPointOfInterest(){
-        room = new Room("testDescription", false);
+        room = new Room("testName", "testDescription", false);
         PointOfInterest pointOfInterest = new PointOfInterest("testDescription", "testLocation");
         room.addPointOfInterest("testName", pointOfInterest);
         HashMap<String, PointOfInterest> pointsOfInterest = room.getPointsOfInterest();
@@ -72,7 +72,7 @@ public class RoomTest {
 
     @Test
     public void testNextRoom(){
-        room = new Room("testDescription", false);
+        room = new Room("testName", "testDescription", false);
         room.setExits(north, east, south, west);
         assertEquals(north, room.getExit("north"));
         assertEquals(east, room.getExit("east"));
@@ -82,7 +82,7 @@ public class RoomTest {
 
     @Test
     public void testNextRoomNull(){
-        room = new Room("testDescription", false);
+        room = new Room("testName", "testDescription", false);
         assertNull(room.getExit("north"));
         assertNull(room.getExit("east"));
         assertNull(room.getExit("south"));

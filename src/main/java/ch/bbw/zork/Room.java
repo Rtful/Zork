@@ -11,17 +11,23 @@ import java.util.Objects;
 
 public class Room {
 
+    private final String roomName;
 	private final String description;
 	private final HashMap<String, PointOfInterest> pointsOfInterest;
 	private final HashMap<String, Item> containers;
 	private final HashMap<String, Door> exits;
 
-	public Room(String description, Boolean container) {
-		this.description = description;
+	public Room(String roomName, String description, Boolean container) {
+		this.roomName = roomName;
+	    this.description = description;
 		this.exits = new HashMap<>();
 		this.pointsOfInterest = new HashMap<>();
 		this.containers = new HashMap<>();
 	}
+
+	public String getRoomName(){
+	    return this.roomName;
+    }
 
     public void addPointOfInterest(String name, PointOfInterest pointOfInterest) {
         pointsOfInterest.put(name, pointOfInterest);
