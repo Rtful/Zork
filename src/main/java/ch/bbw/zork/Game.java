@@ -22,10 +22,11 @@ public class Game {
 
     public Game() throws IOException {
         this.scanner = new Scanner(System.in);
-        Date      date      = new Date();
+        Date date = new Date();
         this.inventory = new Inventory();
         this.parser = new Parser(this.scanner);
         this.world = new World(this.scanner);
+    }
     /**
      * Main play routine.  Loops until end of play.
      */
@@ -55,7 +56,7 @@ public class Game {
         System.out.println("Zork is a simple adventure game.");
         System.out.println("Type 'help' if you need help.");
         System.out.println();
-        System.out.println(this.navigator.getLongDescription());
+        System.out.println(this.world.getLongDescription());
     }
 
         private boolean processCommand(Command command) {
@@ -71,7 +72,7 @@ public class Game {
                 printHelp();
                 break;
             case "go":
-                navigator.go(command.getSecondWord());
+                this.world.go(command.getSecondWord());
                 break;
             case "check":
                 checkSomething(command);
@@ -86,7 +87,7 @@ public class Game {
                 dropItem(command);
                 break;
             case "inspect":
-                world.inspect(command);
+                this.world.inspect(command);
                 break;
             case "unlock":
                 if (command.hasSecondWord()) {
@@ -126,10 +127,10 @@ public class Game {
 			System.out.println("Take what?");
 		} else {
 			String takenItem = command.getSecondWord();
-			if (navigator.getRooms().getContainer().containsKey(takenItem)) {
+			if (this.world.getRooms().getContainer().containsKey(takenItem)) {
 				System.out.println("\nPicked up" + takenItem + "\n");
-				inventory.backpack.put(takenItem, navigator.getRooms().getContainer().get(takenItem));
-				navigator.getRooms().getContainer().remove(takenItem);
+				inventory.backpack.put(takenItem, this.world.getRooms().getContainer().get(takenItem));
+				this.world.getRooms().getContainer().remove(takenItem);
 			} else {
 				System.out.println("I can't take that");
 			}
@@ -142,7 +143,7 @@ public class Game {
         } else {
             String droppedItem = command.getSecondWord();
             if (inventory.backpack.containsKey(droppedItem)) {
-                navigator.getRooms().addContainer(droppedItem, inventory.backpack.get(droppedItem));
+                this.world.getRooms().addContainer(droppedItem, inventory.backpack.get(droppedItem));
                 inventory.backpack.remove(droppedItem);
             } else {
                 System.out.println("I don't have that");

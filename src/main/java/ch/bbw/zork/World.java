@@ -14,7 +14,7 @@ public class World {
     private int x;
     private int y;
     private final Room[][] rooms;
-    private Scanner scanner;
+    private final Scanner scanner;
     HashMap<String, Item> allItems = new HashMap<>();
 
     public World(Scanner scanner) throws IOException {
@@ -63,11 +63,6 @@ public class World {
         cafeteria.setExits(lobbyCafeteria, null, null, null);
         ceoOffice.setExits(null, null, null, lobbyCEOOffice);
 
-        Item key     = new Item("Key", "Just an old rusty key");
-        Item coin    = new Item("Coin", "An ancient looking coin");
-        Item knife   = new Item("Knife", "An old rusty blade");
-        Item picture = new Item("Picture", "Polaroid of someone from your past");
-
         reception.addContainer("key", key);
         reception.addContainer("knife", knife);
         hallway.addContainer("coin", coin);
@@ -81,6 +76,8 @@ public class World {
         storage.addContainer();
         lab.addContainer();
         */
+
+        cafeteria.addContainer("Knife", knife);
 
         rooms[0] = new Room[]{null, reception, storage};
         rooms[1] = new Room[]{office, hallway, lobby, cafeteria};
