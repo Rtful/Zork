@@ -16,6 +16,7 @@ public class Room {
 	private final String description;
 	private final HashMap<String, PointOfInterest> pointsOfInterest;
 	private final HashMap<String, Item> containers;
+	private final HashMap<String, Chest> lockedContainers;
 	private final HashMap<String, Door> exits;
 
 	public Room(String roomName, String description, Boolean container) {
@@ -24,7 +25,12 @@ public class Room {
 		this.exits = new HashMap<>();
 		this.pointsOfInterest = new HashMap<>();
 		this.containers = new HashMap<>();
+		this.lockedContainers = new HashMap<>();
 	}
+
+	public HashMap<String, Chest> getLockedContainers(){
+	    return this.lockedContainers;
+    }
 
 	public String getRoomName(){
 	    return this.roomName;
@@ -48,6 +54,14 @@ public class Room {
             return pointOfInterest.interact();
         }
         return null;
+    }
+
+	public void setLockedContainer(HashMap<String, Chest> lockedItems){
+        lockedItems.forEach((k, v) -> lockedContainers.put(k, v));
+    }
+
+    public HashMap<String, Chest> getLockedContainer(){
+	    return lockedContainers;
     }
 
     public void setExits(Door north, Door east, Door south, Door west) {
