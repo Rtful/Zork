@@ -22,6 +22,7 @@ public class Inventory {
         for (Item item : backpack.values()){
             System.out.format("| %-13s | %-50s |%n", item.getName(), item.getDescription());
         }
+
         System.out.println("+---------------+----------------------------------------------------+");
         System.out.println("Entries:" + backpack.size());
     }
