@@ -17,15 +17,6 @@ public class Navigator {
         x = 0;
         y = 1;
 
-        /* TODO: Put items in the correct rooms' container
-
-        Item key     = new Item("Key", "Just an old rusty key");
-        Item coin    = new Item("Coin", "An ancient looking coin");
-        Item knife   = new Item("Knife", "An old rusty blade");
-        Item picture = new Item("Picture", "Polaroid of someone from your past");
-
-        * */
-
         Room reception = new Room("the reception", false);
         Room lab       = new Room("lab, where some experiments had taken place", false);
         Room office    = new Room("big shared office", false);
@@ -52,6 +43,27 @@ public class Navigator {
         storage.setExits(null, lobbyStorage, null, null);
         cafeteria.setExits(lobbyCafeteria, null, null, null);
         ceoOffice.setExits(null, null, null, lobbyCEOOffice);
+
+        // TODO: Put items in the correct rooms' container
+
+        Item key     = new Item("Key", "Just an old rusty key");
+        Item coin    = new Item("Coin", "An ancient looking coin");
+        Item knife   = new Item("Knife", "An old rusty blade");
+        Item picture = new Item("Picture", "Polaroid of someone from your past");
+
+        reception.addContainer("key", key);
+        reception.addContainer("knife", knife);
+        hallway.addContainer("coin", coin);
+        hallway.addContainer("picture", picture);
+
+        /* TODO: give each room the needed Items
+        office.addContainer();
+        ceoOffice.addContainer();
+        lobby.addContainer();
+        cafeteria.addContainer();
+        storage.addContainer();
+        lab.addContainer();
+        */
 
         rooms[0] = new Room[]{null, reception, storage};
         rooms[1] = new Room[]{office, hallway, lobby, cafeteria};
