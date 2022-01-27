@@ -10,7 +10,7 @@ import java.util.List;
 
 public class CommandWords {
 
-	private List<String> validCommands = Arrays.asList("go", "quit", "help", "take", "check", "look", "inspect" );
+	private List<String> validCommands = Arrays.asList("go", "quit", "help", "take", "check", "look", "inspect");
 
 	public boolean isCommand(String commandWord) {
 		return validCommands.stream()
