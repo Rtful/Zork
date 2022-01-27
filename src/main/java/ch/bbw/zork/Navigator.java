@@ -44,6 +44,25 @@ public class Navigator {
         cafeteria.setExits(lobbyCafeteria, null, null, null);
         ceoOffice.setExits(null, null, null, lobbyCEOOffice);
 
+        Item key     = new Item("Key", "Just an old rusty key");
+        Item coin    = new Item("Coin", "An ancient looking coin");
+        Item knife   = new Item("Knife", "An old rusty blade");
+        Item picture = new Item("Picture", "Polaroid of someone from your past");
+
+        reception.addContainer("key", key);
+        reception.addContainer("knife", knife);
+        hallway.addContainer("coin", coin);
+        hallway.addContainer("picture", picture);
+
+        /* TODO: give each room the needed Items
+        office.addContainer();
+        ceoOffice.addContainer();
+        lobby.addContainer();
+        cafeteria.addContainer();
+        storage.addContainer();
+        lab.addContainer();
+        */
+
         rooms[0] = new Room[]{null, reception, storage};
         rooms[1] = new Room[]{office, hallway, lobby, cafeteria};
         rooms[2] = new Room[]{null, lab, ceoOffice};
@@ -65,6 +84,10 @@ public class Navigator {
 
     public void look() {
         rooms[this.x][this.y].look();
+    }
+
+    public Room getRooms(){
+        return rooms[this.x][this.y];
     }
 
     public void inspect(Command command) {

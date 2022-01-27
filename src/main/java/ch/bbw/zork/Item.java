@@ -1,5 +1,9 @@
 package ch.bbw.zork;
 
+/*
+ * author: Loris Hütter, Januar 2022
+ */
+
 public class Item {
 
     private String name;
