@@ -57,7 +57,7 @@ public class World {
         PointOfInterest sign     = new PointOfInterest("The smiling woman will tell you the answer", "next to the east door");
 
         Lock officeLock    = new Lock(knife, "A code based lock. It doesn't seem to be working though. Some of the wires are exposed.");
-        Lock storageLock   = new Lock("146", "A code based lock. A 3-digit code is required."); //TODO
+        Lock storageLock   = new Lock("146", "A code based lock. A 3-digit code is required.");
         Lock ceoOfficeLock = new Lock(boltCutter, "This door is closed with a padlock.");
         Lock labLock       = new Lock(keycard, "A keycard is required to open this door.");
 
@@ -79,24 +79,8 @@ public class World {
         cafeteria.setExits(lobbyCafeteria, null, null, null);
         ceoOffice.setExits(null, null, null, lobbyCEOOffice);
 
-//        reception.addContainer("key", key);
-//
-//        reception.addContainer("knife", knife);
-//        reception.addContainer("boltCutter", boltCutter);
-//        hallway.addContainer("coin", coin);
-//        hallway.addContainer("picture", picture);
-
-        /* TODO: give each room the needed Items
-        office.addContainer();
-        ceoOffice.addContainer();
-        lobby.addContainer();
-        cafeteria.addContainer();
-        storage.addContainer();
-        lab.addContainer();
-        */
-
         cafeteria.addContainer("knife", knife);
-        ceoOffice.addContainer("keycard", keycard); //TODO put inside safe
+        ceoOffice.addContainer("keycard", keycard);
         storage.addContainer("boltcutter", boltCutter);
 
         rooms[0] = new Room[]{null, reception, storage};

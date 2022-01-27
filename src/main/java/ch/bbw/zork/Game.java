@@ -92,7 +92,7 @@ public class Game {
             case "take":
                 takeItem(command);
                 break;
-            case "look": // TODO: show room items
+            case "look":
                 this.world.look();
                 break;
             case "drop":
