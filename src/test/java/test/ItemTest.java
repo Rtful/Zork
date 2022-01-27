@@ -7,7 +7,7 @@ public class ItemTest {
     private Item item;
     @Test
     public void testItem() {
-        item = new Item("testName", "testDescription");
+        item = new Item("testName", "testDescription", 12);
         assertEquals("testName", item.getName());
         assertEquals("testDescription", item.getDescription());
     }

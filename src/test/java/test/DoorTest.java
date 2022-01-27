@@ -18,7 +18,7 @@ public class DoorTest {
 
     @Before
     public void init(){
-        this.key = new Item("key", "a key");
+        this.key = new Item("key", "a key", 12);
         this.code = "1234";
         this.stringLock = new Lock(this.code, "a lock that needs a code to open");
         this.objectLock = new Lock(this.key, "a lock that needs a key to open");
