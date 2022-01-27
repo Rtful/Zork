@@ -12,32 +12,42 @@ import java.util.*;
  */
 
 public class Game {
- private final Parser parser;
+
+    private final Parser parser;
     private Inventory inventory;
     private final Navigator navigator;
+
     HashMap<String, Item> allItems = new HashMap<>();
+
     public Game() throws IOException {
+
         Date      date      = new Date();
         this.inventory = new Inventory();
         this.parser = new Parser(System.in);
         this.navigator = new Navigator();
+
         Item key     = new Item("Key", "Just an old rusty key");
         Item coin    = new Item("Coin", "An ancient looking coin");
         Item knife   = new Item("Knife", "An old rusty blade");
         Item picture = new Item("Picture", "Polaroid of someone from your past");
+
         allItems.put("key", key);
         allItems.put("coin", coin);
         allItems.put("knife", knife);
         allItems.put("picture", picture);   
     } 
-        /**
+    /**
      * Main play routine.  Loops until end of play.
      */
     public void play() {
+
         printWelcome();
+
         // Enter the main command loop.  Here we repeatedly read commands and
         // execute them until the game is over.
+
         boolean finished = false;
+
         while (!finished) {
             Command command = parser.getCommand();
             if (command == null) {
@@ -48,6 +58,7 @@ public class Game {
         }
         System.out.println("Thank you for playing.  Good bye.");
     }
+
     private void printWelcome() {
         System.out.println();
         System.out.println("Welcome to Zork!");
@@ -56,12 +67,15 @@ public class Game {
         System.out.println();
         System.out.println(this.navigator.getLongDescription());
     }
+
         private boolean processCommand(Command command) {
         if (command.isUnknown()) {
             System.out.println("I don't know what you mean...");
             return false;
         }
+
         String commandWord = command.getCommandWord();
+
         switch (commandWord) {
             case "help":
                 printHelp();
@@ -93,6 +107,7 @@ public class Game {
         }
         return false;
     }
+
     private void printHelp() {
         System.out.println("You are one of few survivors of a zombie apocalypse.");
         System.out.println("You have been bitten by a zombie and are in great need of a remedy.");
@@ -101,13 +116,17 @@ public class Game {
         System.out.println("Your command words are:");
         System.out.println(parser.showCommands());
     }
+
     private void inventory() {
         inventory.showInventory();
+    }
+
 	private void map(){
 		System.out.println("Map");
-        
 	}
+
 	private void takeItem(Command command) {
+
 		if (!command.hasSecondWord()) {
 			System.out.println("Take what?");
 		} else {
@@ -121,6 +140,8 @@ public class Game {
 			}
 		}
 	}
+
+	/* TODO: make item drop in a room in a container
 	private void dropItem(Command command){
 		if (!command.hasSecondWord()) {
 			System.out.println("Drop what?");
@@ -137,8 +158,10 @@ public class Game {
 				System.out.println("You can't drop any Items here, go to the room with the container to drop Items");
 			}
 		}
-	}
+	}*/
+
 	private void checkSomething(Command command) {
+
 		if (!command.hasSecondWord()) {
 			System.out.println("Check what?");
 		} else {
@@ -147,21 +170,6 @@ public class Game {
 				inventory.showInventory();
 			} else {
 				System.out.println("I don't know how to check that");
-			}
-		}
-	}
-
-	private void inspect(Command command) {
-		if (!command.hasSecondWord()) {
-			System.out.println("Inspect what?");
-		} else {
-			String target = command.getSecondWord();
-			// Try to leave current room.
-			String detailedView = currentRoom.inspect(target);
-			if (detailedView == null)
-				System.out.println("Nothing to inspect");
-			else {
-				System.out.println(detailedView);
 			}
 		}
 	}
