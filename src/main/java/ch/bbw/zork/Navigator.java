@@ -44,8 +44,6 @@ public class Navigator {
         cafeteria.setExits(lobbyCafeteria, null, null, null);
         ceoOffice.setExits(null, null, null, lobbyCEOOffice);
 
-        // TODO: Put items in the correct rooms' container
-
         Item key     = new Item("Key", "Just an old rusty key");
         Item coin    = new Item("Coin", "An ancient looking coin");
         Item knife   = new Item("Knife", "An old rusty blade");
