@@ -18,4 +18,12 @@ public class Door {
     public boolean unlock(Item key) {
         return this.lock.unlock(key);
     }
+
+    public String getDescription() {
+        return this.lock.getDescription();
+    }
+
+    public String getLockType() {
+        return this.lock.getType();
+    }
 }

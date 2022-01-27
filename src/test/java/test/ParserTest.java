@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,7 +19,7 @@ public class ParserTest {
     public void testGetCommandSingleWord() {
         byte[]      data  = "look".getBytes();
         InputStream input = new ByteArrayInputStream(data);
-        parser = new Parser(input);
+        parser = new Parser(new Scanner(input));
         Command command = parser.getCommand();
         assertEquals(command.getCommandWord(), "look");
         assertFalse(command.hasSecondWord());
@@ -28,7 +29,7 @@ public class ParserTest {
     public void testGetCommandTwoWords() {
         byte[]      data  = "go east".getBytes();
         InputStream input = new ByteArrayInputStream(data);
-        parser = new Parser(input);
+        parser = new Parser(new Scanner(input));
         Command command = parser.getCommand();
         assertEquals(command.getCommandWord(), "go");
         assertEquals(command.getSecondWord(), "east");
@@ -38,7 +39,7 @@ public class ParserTest {
     public void testGetCommandMultiWords() {
         byte[]      data  = "go too long".getBytes();
         InputStream input = new ByteArrayInputStream(data);
-        parser = new Parser(input);
+        parser = new Parser(new Scanner(input));
         assertNull(parser.getCommand());
     }
 
@@ -46,8 +47,7 @@ public class ParserTest {
     public void testGetCommandNull() {
         byte[]      data  = "".getBytes();
         InputStream input = new ByteArrayInputStream(data);
-        parser = new Parser(input);
-
+        parser = new Parser(new Scanner(input));
         assertThrows(NullPointerException.class, () -> parser.getCommand());
     }
 
@@ -56,7 +56,7 @@ public class ParserTest {
         byte[]       data         = "".getBytes();
         CommandWords commandWords = new CommandWords();
         InputStream  input        = new ByteArrayInputStream(data);
-        parser = new Parser(input);
+        parser = new Parser(new Scanner(input));
         String expected = commandWords.showAll();
 
         assertEquals(expected, parser.showCommands());

@@ -1,7 +1,6 @@
 package ch.bbw.zork;
 
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.util.*;
 
 /**
@@ -16,26 +15,27 @@ public class Game {
 
     private final Parser parser;
     private Inventory inventory;
-    private final Navigator navigator;
+    private final World world;
+    private final Scanner scanner;
 
     HashMap<String, Item> allItems = new HashMap<>();
 
     public Game() throws IOException {
-
+        this.scanner = new Scanner(System.in);
         Date      date      = new Date();
         this.inventory = new Inventory();
-        this.parser = new Parser(System.in);
-        this.navigator = new Navigator();
+        this.parser = new Parser(this.scanner);
+        this.world = new World(this.scanner);
 
         Item key     = new Item("Key", "Just an old rusty key");
         Item coin    = new Item("Coin", "An ancient looking coin");
         Item knife   = new Item("Knife", "An old rusty blade");
         Item picture = new Item("Picture", "Polaroid of someone from your past");
 
-        allItems.put("key", key);
-        allItems.put("coin", coin);
-        allItems.put("knife", knife);
-        allItems.put("picture", picture);   
+        this.allItems.put("key", key);
+        this.allItems.put("coin", coin);
+        this.allItems.put("knife", knife);
+        this.allItems.put("picture", picture);
     } 
     /**
      * Main play routine.  Loops until end of play.
@@ -66,7 +66,7 @@ public class Game {
         System.out.println("Zork is a simple adventure game.");
         System.out.println("Type 'help' if you need help.");
         System.out.println();
-        System.out.println(this.navigator.getLongDescription());
+        System.out.println(this.world.getLongDescription());
     }
 
         private boolean processCommand(Command command) {
@@ -82,7 +82,11 @@ public class Game {
                 printHelp();
                 break;
             case "go":
-                navigator.go(command.getSecondWord());
+                if (command.hasSecondWord()) {
+                    world.go(command.getSecondWord());
+                } else {
+                    System.out.println("Please specify where you want to go");
+                }
                 break;
             case "check":
                 checkSomething(command);
@@ -91,12 +95,19 @@ public class Game {
                 takeItem(command);
                 break;
             case "look":
-                this.navigator.look();
+                this.world.look();
                 break;
             case "map":
                 map();
             case "inspect":
-                navigator.inspect(command);
+                world.inspect(command);
+                break;
+            case "unlock":
+                if (command.hasSecondWord()) {
+                    this.world.go(command.getSecondWord());
+                } else {
+                    System.out.println("Please specify what you want to unlock");
+                }
                 break;
             case "quit":
                 if (command.hasSecondWord()) {
@@ -131,35 +142,16 @@ public class Game {
 		if (!command.hasSecondWord()) {
 			System.out.println("Take what?");
 		} else {
-			String takenItem = command.getSecondWord();
-			if (allItems.containsKey(takenItem)) {
-				System.out.println("\nPicked up" + takenItem + "\n");
-				inventory.backpack.put(takenItem, allItems.get(takenItem));
-				allItems.remove(takenItem);
-			} else {
+			String requestedItem = command.getSecondWord();
+            Item takenItem = this.world.takeItem(requestedItem);
+            if (takenItem != null) {
+				this.inventory.backpack.put(requestedItem, takenItem);
+                System.out.println("Picked up " + requestedItem);
+            } else {
 				System.out.println("I can't take that");
 			}
 		}
 	}
-
-	/* TODO: make item drop in a room in a container
-	private void dropItem(Command command){
-		if (!command.hasSecondWord()) {
-			System.out.println("Drop what?");
-		} else {
-			String droppedItem = command.getSecondWord();
-			if (currentRoom.getContainer()){
-				if(inventory.backpack.containsKey(droppedItem)){
-					container.put(droppedItem, inventory.backpack.get(droppedItem));
-					inventory.backpack.remove(droppedItem);
-				} else {
-					System.out.println("I don't have that");
-				}
-			} else {
-				System.out.println("You can't drop any Items here, go to the room with the container to drop Items");
-			}
-		}
-	}*/
 
 	private void checkSomething(Command command) {
 

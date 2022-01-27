@@ -5,14 +5,31 @@ package ch.bbw.zork;
  */
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Scanner;
 
-public class Navigator {
+public class World {
     private int x;
     private int y;
     private final Room[][] rooms;
+    private Scanner scanner;
+    HashMap<String, Item> allItems = new HashMap<>();
 
-    public Navigator() throws IOException {
+    public World(Scanner scanner) throws IOException {
+        this.scanner = scanner;
+        Item key     = new Item("Key", "Just an old rusty key");
+        Item coin    = new Item("Coin", "An ancient looking coin");
+        Item knife   = new Item("Knife", "An old rusty blade");
+        Item picture = new Item("Picture", "Polaroid of someone from your past");
+        allItems = new HashMap<String, Item>(Map.of(
+                "key", key,
+                "coin", coin,
+                "knife", knife,
+                "picture", picture
+        ));
+
         rooms = new Room[4][3];
         x = 0;
         y = 1;
@@ -26,8 +43,10 @@ public class Navigator {
         Room storage   = new Room("the storage room", false);
         Room hallway   = new Room("an eerie partially lit hallway", false);
 
+        Lock officeLock = new Lock(knife, "A code based lock. Some of the wires are exposed.");
+
         Door receptionHallway = new Door(null);
-        Door hallwayOffice    = new Door(null);
+        Door hallwayOffice    = new Door(officeLock);
         Door hallwayLobby     = new Door(null);
         Door hallwayLab       = new Door(null);
         Door lobbyStorage     = new Door(null);
@@ -50,13 +69,28 @@ public class Navigator {
 
         Image monaLisaASCII = new Image("img/monaLisa.txt");
         Image waveASCII     = new Image("img/wave.txt");
+        Image dogASCII      = new Image("img/dog.txt");
 
-        PointOfInterest monaLisa = new PointOfInterest(monaLisaASCII.getImage(), "north wall");
-        PointOfInterest wave     = new PointOfInterest(waveASCII.getImage(), "north wall");
+        PointOfInterest monaLisa = new PointOfInterest(monaLisaASCII.getImage(), "on the north wall");
+        PointOfInterest wave     = new PointOfInterest(waveASCII.getImage(), "on the north wall");
+        PointOfInterest dog      = new PointOfInterest(dogASCII.getImage(), "next to the PC");
+        PointOfInterest pc       = new PointOfInterest("The PC is running but a password is required", "on one of the desks");
 
-        hallway.addPointOfInterest("vertical_painting", monaLisa);
-        hallway.addPointOfInterest("horizontal_painting", wave);
+        hallway.addPointOfInterest("Mona_Lisa", monaLisa);
+        hallway.addPointOfInterest("Wave", wave);
+        office.addPointOfInterest("Picture", dog);
+        office.addPointOfInterest("PC", pc);
 
+    }
+
+    public Item takeItem(String requestedItem){
+        if (this.allItems.containsKey(requestedItem)) {
+            Item foundItem = this.allItems.get(requestedItem);
+            this.allItems.remove(requestedItem);
+            return foundItem;
+        } else {
+            return null;
+        }
     }
 
     public int[] getCoordinates() {
@@ -71,7 +105,7 @@ public class Navigator {
         if (!command.hasSecondWord()) {
             System.out.println("Inspect what?");
         } else {
-            String target = command.getSecondWord();
+            String target       = command.getSecondWord();
             String detailedView = this.rooms[this.x][this.y].inspect(target);
             System.out.println(Objects.requireNonNullElse(detailedView, "Nothing to inspect"));
         }
@@ -80,6 +114,13 @@ public class Navigator {
     public String getLongDescription() {
         return this.rooms[this.x][this.y].getLongDescription();
     }
+
+//    public void unlock(String exit, Scanner scanner){
+//        Door requestedDoor = this.rooms[this.x][this.y].getExit(exit);
+//        if (Objects.equals(requestedDoor.getLockType(), "code")){
+//
+//        }
+//    }
 
     public void go(String direction) {
 
@@ -119,6 +160,16 @@ public class Navigator {
                 this.x = newX;
                 this.y = newY;
                 System.out.println(rooms[this.x][this.y].getLongDescription());
+            } else {
+                if (Objects.equals(this.rooms[this.x][this.y].getExit(direction).getLockType(), "code")) {
+                    System.out.println("Please enter a code");
+                    String code = scanner.nextLine();
+                    this.rooms[this.x][this.y].unlock(direction, code);
+                } else {
+                    System.out.println("Please select the item you want to use");
+                    String chosenItem = scanner.nextLine();
+//                    this.rooms[this.x][this.y].unlock(direction, code);
+                }
             }
         }
     }

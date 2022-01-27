@@ -7,17 +7,20 @@ public class Lock {
     private final String code;
     private final String description;
     private boolean unlocked = false;
+    private String type;
 
     public Lock(String code, String description){
         this.key = null;
         this.code = code;
         this.description = description;
+        this.type = "code";
     }
 
     public Lock(Item key, String description){
         this.key = key;
         this.code = null;
         this.description = description;
+        this.type = "key";
     }
 
     public boolean isUnlocked(){
@@ -34,5 +37,9 @@ public class Lock {
 
     public boolean unlock(Item key){
         return this.unlocked = Objects.equals(this.key, key);
+    }
+
+    public String getType(){
+        return this.type;
     }
 }

@@ -20,7 +20,8 @@ public class CommandWords {
                 "take", "pick up items",
                 "check", "",
                 "look", "get information about the current room",
-                "inspect", "get information about an item or feature of the room"
+                "inspect", "get information about an item or feature of the room",
+                "unlock", "unlock doors and containers"
         ));
     }
 
