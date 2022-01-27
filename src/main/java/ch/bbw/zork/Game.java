@@ -18,6 +18,8 @@ public class Game {
     private Inventory inventory;
     private final Navigator navigator;
 
+    WorldMap worldMap = new WorldMap();
+
     public Game() throws IOException {
 
         Date      date      = new Date();
@@ -151,7 +153,9 @@ public class Game {
 		} else {
 			String checking = command.getSecondWord();
 			if (checking.equals("backpack")) {
-				inventory.showInventory();
+                inventory.showInventory();
+            } else if (checking.equals("map")) {
+                worldMap.showMap();
 			} else {
 				System.out.println("I don't know how to check that");
 			}

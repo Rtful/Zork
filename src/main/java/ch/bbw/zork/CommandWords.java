@@ -19,7 +19,6 @@ public class CommandWords {
                 "help", "get useful tips",
                 "take", "pick up items",
                 "check", "",
-                "drop", "",
                 "look", "get information about the current room",
                 "inspect", "get information about an item or feature of the room"
         ));
