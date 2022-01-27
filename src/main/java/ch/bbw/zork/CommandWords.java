@@ -15,12 +15,14 @@ public class CommandWords {
     public CommandWords() {
         this.validCommands = new HashMap<>(Map.of(
                 "go", "leave the current room in the desired direction (north, east, south, west)",
+                "back", "go back to the previous room",
                 "quit", "quit the game",
                 "help", "get useful tips",
                 "take", "pick up items",
                 "check", "",
                 "look", "get information about the current room",
                 "inspect", "get information about an item or feature of the room",
+                "use", "interact with something",
                 "unlock", "unlock doors and containers"
         ));
     }
@@ -30,12 +32,12 @@ public class CommandWords {
     }
 
     public String showAll() {
-        StringBuilder commandsWithDescription = new StringBuilder();
-        Iterator<Map.Entry<String, String>> iterator = validCommands.entrySet().iterator();
+        StringBuilder                       commandsWithDescription = new StringBuilder();
+        Iterator<Map.Entry<String, String>> iterator                = validCommands.entrySet().iterator();
         while (iterator.hasNext()) {
-            Map.Entry<String, String> entry = iterator.next();
-            boolean hasNext = iterator.hasNext();
-            commandsWithDescription.append("'").append(entry.getKey()).append("' to ").append(entry.getValue()).append(hasNext ? "\n": "");
+            Map.Entry<String, String> entry   = iterator.next();
+            boolean                   hasNext = iterator.hasNext();
+            commandsWithDescription.append("'").append(entry.getKey()).append("' to ").append(entry.getValue()).append(hasNext ? "\n" : "");
         }
         return commandsWithDescription.toString();
     }

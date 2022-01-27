@@ -20,7 +20,7 @@ public class RoomTest {
         room = new Room("testDescription", false);
         PointOfInterest pointOfInterest = new PointOfInterest("testName", "testLocation");
         room.addPointOfInterest("testName", pointOfInterest);
-        assertTrue(room.getPointsOfInterest().containsKey("testName"));
+        assertEquals(pointOfInterest, room.getPointOfInterest("testName"));
     }
     @Test
     public void testSetExits(){
@@ -65,8 +65,6 @@ public class RoomTest {
         room = new Room("testDescription", false);
         PointOfInterest pointOfInterest = new PointOfInterest("testDescription", "testLocation");
         room.addPointOfInterest("testName", pointOfInterest);
-        HashMap<String, PointOfInterest> pointsOfInterest = room.getPointsOfInterest();
-        assertTrue(pointsOfInterest.containsKey("testName"));
         assertEquals("testDescription", room.inspect("testName"));
     }
 

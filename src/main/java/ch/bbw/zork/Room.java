@@ -4,6 +4,7 @@ package ch.bbw.zork;
  * refactoring: Rinaldo Lanza, September 2020
  */
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,9 +32,17 @@ public class Room {
 		containers.put(name, item);
 	}
 
-	public HashMap<String, PointOfInterest> getPointsOfInterest() {
-		return pointsOfInterest;
+	public PointOfInterest getPointOfInterest(String name) {
+		return pointsOfInterest.getOrDefault(name, null);
 	}
+
+    public String interact(String target) {
+        PointOfInterest pointOfInterest = this.getPointOfInterest(target);
+        if (pointOfInterest != null) {
+            return pointOfInterest.interact();
+        }
+        return null;
+    }
 
     public void setExits(Door north, Door east, Door south, Door west) {
         exits.put("north", north);

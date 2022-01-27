@@ -13,16 +13,20 @@ import java.util.Scanner;
 public class World {
     private int x;
     private int y;
+    private int oldX;
+    private int oldY;
     private final Room[][] rooms;
     private final Scanner scanner;
     HashMap<String, Item> allItems = new HashMap<>();
 
     public World(Scanner scanner) throws IOException {
         this.scanner = scanner;
-        Item key     = new Item("Key", "Just an old rusty key");
-        Item coin    = new Item("Coin", "An ancient looking coin");
-        Item knife   = new Item("Knife", "An old rusty blade");
-        Item picture = new Item("Picture", "Polaroid of someone from your past");
+        Item key        = new Item("Key", "Just an old rusty key");
+        Item coin       = new Item("Coin", "An ancient looking coin");
+        Item knife      = new Item("Knife", "An old rusty blade");
+        Item picture    = new Item("Picture", "Polaroid of someone from your past");
+        Item keycard    = new Item("Keycard", "A keycard. It probably opens up the exit");
+        Item boltCutter = new Item("BoltCutter", "A boltcutter. Very useful for cutting wire and fences");
         allItems = new HashMap<String, Item>(Map.of(
                 "key", key,
                 "coin", coin,
@@ -34,6 +38,18 @@ public class World {
         x = 0;
         y = 1;
 
+        Image monaLisaASCII = new Image("img/monaLisa.txt");
+        Image waveASCII     = new Image("img/wave.txt");
+        Image dogASCII      = new Image("img/dog.txt");
+
+        Riddle pcRiddle = new Riddle("This PC is locked. A 5-digit password is required", "Kisha", "If your are searching for information,\nthe smliling woman will tell you the answer.");
+
+        PointOfInterest monaLisa = new PointOfInterest(monaLisaASCII.getImage(), "on the north wall");
+        PointOfInterest wave     = new PointOfInterest(waveASCII.getImage(), "on the north wall");
+        PointOfInterest dog      = new PointOfInterest(dogASCII.getImage(), "next to the PC");
+        PointOfInterest pc       = new PointOfInterest("The PC is running but a password is required\nYou can interact with this object", "on one of the desks", pcRiddle);
+        PointOfInterest sign     = new PointOfInterest("The smiling woman will tell you the answer", "next to the east door");
+
         Room reception = new Room("the reception", false);
         Room lab       = new Room("lab, where some experiments had taken place", false);
         Room office    = new Room("big shared office", false);
@@ -43,18 +59,21 @@ public class World {
         Room storage   = new Room("the storage room", false);
         Room hallway   = new Room("an eerie partially lit hallway", false);
 
-        Lock officeLock = new Lock(knife, "A code based lock. Some of the wires are exposed.");
+        Lock officeLock  = new Lock(knife, "A code based lock.It doesn't seem to be working though. Some of the wires are exposed.");
+        Lock ceoSafeLock = new Lock("146", "A code based lock. A 3-digit code is required.");
+        Lock ceoOfficeLock = new Lock("7854", "A code based lock. A 4-digit code is required.");
+        Lock labLock     = new Lock(keycard, "A keycard is required to open this door.");
 
         Door receptionHallway = new Door(null);
         Door hallwayOffice    = new Door(officeLock);
         Door hallwayLobby     = new Door(null);
-        Door hallwayLab       = new Door(null);
+        Door hallwayLab       = new Door(labLock);
         Door lobbyStorage     = new Door(null);
         Door lobbyCafeteria   = new Door(null);
-        Door lobbyCEOOffice   = new Door(null);
+        Door lobbyCEOOffice   = new Door(ceoOfficeLock);
 
         reception.setExits(null, receptionHallway, null, null);
-        hallway.setExits(hallwayOffice, receptionHallway, hallwayLobby, hallwayLab);
+        hallway.setExits(hallwayOffice, hallwayLab, hallwayLobby, receptionHallway);
         office.setExits(null, null, hallwayOffice, null);
         lab.setExits(null, null, null, hallwayLab);
         lobby.setExits(hallwayLobby, lobbyCEOOffice, lobbyCafeteria, lobbyStorage);
@@ -63,10 +82,12 @@ public class World {
         cafeteria.setExits(lobbyCafeteria, null, null, null);
         ceoOffice.setExits(null, null, null, lobbyCEOOffice);
 
-        reception.addContainer("key", key);
-        reception.addContainer("knife", knife);
-        hallway.addContainer("coin", coin);
-        hallway.addContainer("picture", picture);
+//        reception.addContainer("key", key);
+//
+//        reception.addContainer("knife", knife);
+//        reception.addContainer("boltCutter", boltCutter);
+//        hallway.addContainer("coin", coin);
+//        hallway.addContainer("picture", picture);
 
         /* TODO: give each room the needed Items
         office.addContainer();
@@ -77,29 +98,22 @@ public class World {
         lab.addContainer();
         */
 
-        cafeteria.addContainer("Knife", knife);
+        cafeteria.addContainer("knife", knife);
+        ceoOffice.addContainer("keycard", keycard);
+//        reception.addContainer("boltcutter", boltCutter);
 
         rooms[0] = new Room[]{null, reception, storage};
         rooms[1] = new Room[]{office, hallway, lobby, cafeteria};
         rooms[2] = new Room[]{null, lab, ceoOffice};
 
-        Image monaLisaASCII = new Image("img/monaLisa.txt");
-        Image waveASCII     = new Image("img/wave.txt");
-        Image dogASCII      = new Image("img/dog.txt");
-
-        PointOfInterest monaLisa = new PointOfInterest(monaLisaASCII.getImage(), "on the north wall");
-        PointOfInterest wave     = new PointOfInterest(waveASCII.getImage(), "on the north wall");
-        PointOfInterest dog      = new PointOfInterest(dogASCII.getImage(), "next to the PC");
-        PointOfInterest pc       = new PointOfInterest("The PC is running but a password is required", "on one of the desks");
-
-        hallway.addPointOfInterest("Mona_Lisa", monaLisa);
-        hallway.addPointOfInterest("Wave", wave);
+        lobby.addPointOfInterest("Mona_Lisa", monaLisa);
+        lobby.addPointOfInterest("Wave", wave);
+        lobby.addPointOfInterest("Sign", sign);
         office.addPointOfInterest("Picture", dog);
         office.addPointOfInterest("PC", pc);
-
     }
 
-    public Item takeItem(String requestedItem){
+    public Item takeItem(String requestedItem) {
         if (this.allItems.containsKey(requestedItem)) {
             Item foundItem = this.allItems.get(requestedItem);
             this.allItems.remove(requestedItem);
@@ -117,7 +131,7 @@ public class World {
         rooms[this.x][this.y].look();
     }
 
-    public Room getRooms(){
+    public Room getCurrentRoom() {
         return rooms[this.x][this.y];
     }
 
@@ -141,6 +155,23 @@ public class World {
 //
 //        }
 //    }
+
+    public void back() {
+        this.x = this.oldX;
+        this.y = this.oldY;
+        System.out.println(this.rooms[this.x][this.y].getLongDescription());
+    }
+
+    public void use(String target) {
+        String riddleDescription = this.rooms[this.x][this.y].interact(target);
+        if (riddleDescription != null) {
+            System.out.println(riddleDescription);
+            String attemptedSolution = scanner.nextLine();
+            System.out.println(this.rooms[this.x][this.y].getPointOfInterest(target).solveRiddle(attemptedSolution));
+        } else {
+            System.out.println("You can't interact with that");
+        }
+    }
 
     public void go(String direction) {
 
@@ -177,6 +208,8 @@ public class World {
                 throw e;
             }
             if (exit.isOpen()) {
+                this.oldX = this.x;
+                this.oldY = this.y;
                 this.x = newX;
                 this.y = newY;
                 System.out.println(rooms[this.x][this.y].getLongDescription());
@@ -186,6 +219,8 @@ public class World {
                     String code = scanner.nextLine();
                     if (this.rooms[this.x][this.y].unlock(direction, code)) {
                         System.out.println("You entered the correct combination and the door opened.");
+                        this.oldX = this.x;
+                        this.oldY = this.y;
                         this.x = newX;
                         this.y = newY;
                         System.out.println(rooms[this.x][this.y].getLongDescription());
@@ -199,6 +234,8 @@ public class World {
                     Item   key        = Inventory.getItem(chosenItem);
                     if (this.rooms[this.x][this.y].unlock(direction, key)) {
                         System.out.println("You used the " + chosenItem + " to open the door.");
+                        this.oldX = this.x;
+                        this.oldY = this.y;
                         this.x = newX;
                         this.y = newY;
                         System.out.println(rooms[this.x][this.y].getLongDescription());

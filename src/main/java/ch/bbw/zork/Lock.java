@@ -7,7 +7,7 @@ public class Lock {
     private final String code;
     private final String description;
     private boolean unlocked = false;
-    private String type;
+    private final String type;
 
     public Lock(String code, String description){
         this.key = null;

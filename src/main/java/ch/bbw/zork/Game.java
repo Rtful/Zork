@@ -38,14 +38,21 @@ public class Game {
         // execute them until the game is over.
 
         boolean finished = false;
+        boolean won = false;
 
-        while (!finished) {
+        while (!finished && !won) {
             Command command = parser.getCommand();
             if (command == null) {
                 System.out.println("Please enter a valid command");
                 continue;
             }
             finished = processCommand(command);
+            if (Arrays.equals(this.world.getCoordinates(), new int[]{2, 1})) {
+                won = true;
+            }
+        }
+        if (won){
+            System.out.println("Congratulations! You have won the game");
         }
         System.out.println("Thank you for playing.  Good bye.");
     }
@@ -74,6 +81,9 @@ public class Game {
             case "go":
                 this.world.go(command.getSecondWord());
                 break;
+            case "back":
+                this.world.back();
+                break;
             case "check":
                 checkSomething(command);
                 break;
@@ -85,6 +95,13 @@ public class Game {
                 break;
             case "drop":
                 dropItem(command);
+                break;
+            case "use":
+                if (command.hasSecondWord()) {
+                    this.world.use(command.getSecondWord());
+                } else {
+                    System.out.println("Please specify what you want to use");
+                }
                 break;
             case "inspect":
                 this.world.inspect(command);
@@ -127,10 +144,10 @@ public class Game {
 			System.out.println("Take what?");
 		} else {
 			String takenItem = command.getSecondWord();
-			if (this.world.getRooms().getContainer().containsKey(takenItem)) {
+			if (this.world.getCurrentRoom().getContainer().containsKey(takenItem)) {
 				System.out.println("\nPicked up" + takenItem + "\n");
-				inventory.backpack.put(takenItem, this.world.getRooms().getContainer().get(takenItem));
-				this.world.getRooms().getContainer().remove(takenItem);
+				inventory.backpack.put(takenItem, this.world.getCurrentRoom().getContainer().get(takenItem));
+				this.world.getCurrentRoom().getContainer().remove(takenItem);
 			} else {
 				System.out.println("I can't take that");
 			}
@@ -143,7 +160,7 @@ public class Game {
         } else {
             String droppedItem = command.getSecondWord();
             if (inventory.backpack.containsKey(droppedItem)) {
-                this.world.getRooms().addContainer(droppedItem, inventory.backpack.get(droppedItem));
+                this.world.getCurrentRoom().addContainer(droppedItem, inventory.backpack.get(droppedItem));
                 inventory.backpack.remove(droppedItem);
             } else {
                 System.out.println("I don't have that");
