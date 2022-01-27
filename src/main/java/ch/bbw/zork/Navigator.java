@@ -1,5 +1,9 @@
 package ch.bbw.zork;
 
+/*
+ * author: Aaron Holenstein, Januar 2022
+ */
+
 import java.io.IOException;
 import java.util.Objects;
 
@@ -55,6 +59,10 @@ public class Navigator {
 
     }
 
+    public int[] getCoordinates() {
+        return new int[]{this.x, this.y};
+    }
+
     public void look() {
         rooms[this.x][this.y].look();
     }
@@ -64,21 +72,17 @@ public class Navigator {
             System.out.println("Inspect what?");
         } else {
             String target = command.getSecondWord();
-            // Try to leave current room.
             String detailedView = this.rooms[this.x][this.y].inspect(target);
             System.out.println(Objects.requireNonNullElse(detailedView, "Nothing to inspect"));
         }
     }
 
-    public String getLongDescription(){
+    public String getLongDescription() {
         return this.rooms[this.x][this.y].getLongDescription();
     }
 
-    public void go(Command command){
+    public void go(String direction) {
 
-        String  direction = command.getSecondWord();
-
-        // Try to leave current room.
         Door exit = this.rooms[this.x][this.y].getExit(direction);
         int  newX = this.x;
         int  newY = this.y;

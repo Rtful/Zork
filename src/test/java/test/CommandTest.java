@@ -1,7 +1,6 @@
 package test;
 import ch.bbw.zork.Command;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -9,9 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CommandTest {
     Command command;
-    @BeforeEach
-    protected void beforeEach() {
-    }
 
     @Test
     public void testTwoWordCommand() {

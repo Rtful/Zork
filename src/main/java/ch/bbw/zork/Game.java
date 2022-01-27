@@ -6,9 +6,10 @@ import java.util.*;
 
 /**
  * Class Game - the main class of the "Zork" game.
- * <p>
+ *
  * Author:  Michael Kolling, 1.1, March 2000
  * refactoring: Rinaldo Lanza, September 2020
+ * refactoring: Aaron Holenstein, Januar 2022
  */
 
 public class Game {
@@ -81,7 +82,7 @@ public class Game {
                 printHelp();
                 break;
             case "go":
-                navigator.go(command);
+                navigator.go(command.getSecondWord());
                 break;
             case "check":
                 checkSomething(command);
