@@ -21,18 +21,19 @@ public class Game {
 	private Room bedroom, lab, apartment1, apartment2, hallway;
 	private Inventory inventory;
 
-	HashMap<String, Item> allItems = new HashMap<String, Item>();
+	HashMap<String, Item> allItems = new HashMap<>();
+	HashMap<String, Item> container = new HashMap<>();
 
 	public Game() throws IOException {
 		parser = new Parser(System.in);
 
 		inventory = new Inventory();
 
-		bedroom = new Room("your apartment");
-		lab = new Room("lab, where some experiments had taken place");
-		apartment1 = new Room("the Seahorse Tavern (the campus pub)");
-		apartment2 = new Room("the G Block");
-		hallway = new Room("an eerie partially lit hallway");
+		bedroom = new Room("your apartment", false);
+		lab = new Room("lab, where some experiments had taken place", false);
+		apartment1 = new Room("the Seahorse Tavern (the campus pub)", false);
+		apartment2 = new Room("the G Block", true);
+		hallway = new Room("an eerie partially lit hallway", false);
 
 		Image monaLisaASCII = new Image("img/monaLisa.txt");
 		Image waveASCII = new Image("img/wave.txt");
@@ -101,7 +102,10 @@ public class Game {
 		} else if (commandWord.equals("go")) {
 			goRoom(command);
 
-		} else if (commandWord.equals("check")) {
+		} else if (commandWord.equals("map")){
+			map();
+
+		}else if (commandWord.equals("check")) {
 			checkSomething(command);
 
 		} else if (commandWord.equals("take")){
@@ -113,7 +117,9 @@ public class Game {
 		} else if (commandWord.equals("inspect")) {
 			inspect(command);
 
-		} else if (commandWord.equals("quit")) {
+		} else if(commandWord.equals("drop")){
+			dropItem(command);
+		}else if (commandWord.equals("quit")) {
 			if (command.hasSecondWord()) {
 				System.out.println("Quit what?");
 			} else {
@@ -135,6 +141,10 @@ public class Game {
 		inventory.showInventory();
 	}
 
+	private void map(){
+		System.out.println("Map");
+	}
+
 	private void takeItem(Command command) {
 		if (!command.hasSecondWord()) {
 			System.out.println("Take what?");
@@ -150,18 +160,34 @@ public class Game {
 		}
 	}
 
+	private void dropItem(Command command){
+		if (!command.hasSecondWord()) {
+			System.out.println("Drop what?");
+		} else {
+			String droppedItem = command.getSecondWord();
+			if (currentRoom.getContainer()){
+				if(inventory.backpack.containsKey(droppedItem)){
+					container.put(droppedItem, inventory.backpack.get(droppedItem));
+					inventory.backpack.remove(droppedItem);
+				} else {
+					System.out.println("I don't have that");
+				}
+			} else {
+				System.out.println("You can't drop any Items here, go to the room with the container to drop Items");
+			}
+		}
+	}
+
 	private void checkSomething(Command command) {
 		if (!command.hasSecondWord()) {
 			System.out.println("Check what?");
 		} else {
 			String checking = command.getSecondWord();
-			inventory.showInventory(); //TODO: remove default showing inventory after below TODO is done
-			//TODO: make check what input is checked and make it work
-			/*if (checking == "backpack"){
+			if (checking.equals("backpack")) {
 				inventory.showInventory();
 			} else {
 				System.out.println("I don't know how to check that");
-			}*/
+			}
 		}
 	}
 
