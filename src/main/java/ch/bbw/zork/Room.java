@@ -90,6 +90,13 @@ public class Room {
             String location = entry.getValue().getLocation();
             System.out.println("A " + entry.getKey() + " " + location);
         }
+        if (!containers.isEmpty()){
+            System.out.print("You also see this/these items: ");
+            containers.forEach((k, v) -> System.out.print(" | " + k + " | "));
+            System.out.println();
+        } else {
+            System.out.println("There are no items here");
+        }
     }
 
     public boolean unlock(String direction, Item key) {
