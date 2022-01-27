@@ -90,7 +90,7 @@ public class Game {
             case "take":
                 takeItem(command);
                 break;
-            case "look":
+            case "look": // TODO: show room items
                 this.world.look();
                 break;
             case "drop":
@@ -145,7 +145,7 @@ public class Game {
 		} else {
 			String takenItem = command.getSecondWord();
 			if (this.world.getCurrentRoom().getContainer().containsKey(takenItem)) {
-				System.out.println("\nPicked up" + takenItem + "\n");
+				System.out.println("\nPicked up " + takenItem + "\n");
 				inventory.backpack.put(takenItem, this.world.getCurrentRoom().getContainer().get(takenItem));
 				this.world.getCurrentRoom().getContainer().remove(takenItem);
 			} else {
@@ -160,7 +160,7 @@ public class Game {
         } else {
             String droppedItem = command.getSecondWord();
             if (inventory.backpack.containsKey(droppedItem)) {
-                this.world.getCurrentRoom().addContainer(droppedItem, inventory.backpack.get(droppedItem));
+                this.world.getRooms().addContainer(droppedItem, inventory.backpack.get(droppedItem));
                 inventory.backpack.remove(droppedItem);
             } else {
                 System.out.println("I don't have that");
@@ -177,7 +177,7 @@ public class Game {
 			if (checking.equals("backpack")) {
                 inventory.showInventory();
             } else if (checking.equals("map")) {
-                worldMap.showMap();
+                worldMap.showMap(world.getRooms().getRoomName());
 			} else {
 				System.out.println("I don't know how to check that");
 			}

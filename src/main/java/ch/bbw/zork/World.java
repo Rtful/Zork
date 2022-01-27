@@ -38,6 +38,14 @@ public class World {
         x = 0;
         y = 1;
 
+        Room reception = new Room("reception", "the reception", false);
+        Room lab       = new Room("lab", "lab, where some experiments had taken place", false);
+        Room office    = new Room("office", "big shared office", false);
+        Room ceoOffice = new Room("ceoOffice", "fancy office belonging to the manager", false);
+        Room lobby     = new Room("lobby", "the lobby", false);
+        Room cafeteria = new Room("cafeteria", "the cafeteria", false);
+        Room storage   = new Room("storage", "the storage room", false);
+        Room hallway   = new Room("hallway", "an eerie partially lit hallway", false);
         Image monaLisaASCII = new Image("img/monaLisa.txt");
         Image waveASCII     = new Image("img/wave.txt");
         Image dogASCII      = new Image("img/dog.txt");
@@ -49,15 +57,6 @@ public class World {
         PointOfInterest dog      = new PointOfInterest(dogASCII.getImage(), "next to the PC");
         PointOfInterest pc       = new PointOfInterest("The PC is running but a password is required\nYou can interact with this object", "on one of the desks", pcRiddle);
         PointOfInterest sign     = new PointOfInterest("The smiling woman will tell you the answer", "next to the east door");
-
-        Room reception = new Room("the reception", false);
-        Room lab       = new Room("lab, where some experiments had taken place", false);
-        Room office    = new Room("big shared office", false);
-        Room ceoOffice = new Room("fancy office belonging to the manager", false);
-        Room lobby     = new Room("the lobby", false);
-        Room cafeteria = new Room("the cafeteria", false);
-        Room storage   = new Room("the storage room", false);
-        Room hallway   = new Room("an eerie partially lit hallway", false);
 
         Lock officeLock  = new Lock(knife, "A code based lock.It doesn't seem to be working though. Some of the wires are exposed.");
         Lock ceoSafeLock = new Lock("146", "A code based lock. A 3-digit code is required.");
