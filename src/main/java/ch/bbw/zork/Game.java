@@ -1,1 +1,169 @@
-package ch.bbw.zork;import java.util.ArrayList;import java.util.Arrays;import java.util.HashSet;import java.util.Stack;/** * Class Game - the main class of the "Zork" game. * * Author:  Michael Kolling, 1.1, March 2000 * refactoring: Rinaldo Lanza, September 2020 */public class Game {		private Parser parser;	private Room currentRoom;	private Room outside, lab, tavern, gblock, office;	public Game() {				parser = new Parser(System.in);		outside = new Room("outside G block on Peninsula campus");		lab = new Room("lab, a lecture theatre in A block");		tavern = new Room("the Seahorse Tavern (the campus pub)");		gblock = new Room("the G Block");		office = new Room("the computing admin office");		outside.setExits(null, lab, gblock, tavern);		lab.setExits(null, null, null, outside);		tavern.setExits(null, outside, null, null);		gblock.setExits(outside, office, null, null);		office.setExits(null, null, null, gblock);		currentRoom = outside; // start game outside	}	/**	 *  Main play routine.  Loops until end of play.	 */	public void play() {		printWelcome();		// Enter the main command loop.  Here we repeatedly read commands and		// execute them until the game is over.		boolean finished = false;		while (!finished) {			Command command = parser.getCommand();			finished = processCommand(command);		}		System.out.println("Thank you for playing.  Good bye.");	}	private void printWelcome() {		System.out.println();		System.out.println("Welcome to Zork!");		System.out.println("Zork is a simple adventure game.");		System.out.println("Type 'help' if you need help.");		System.out.println();		System.out.println(currentRoom.longDescription());	}	private boolean processCommand(Command command) {		if (command.isUnknown()) {			System.out.println("I don't know what you mean...");			return false;		}		String commandWord = command.getCommandWord();		if (commandWord.equals("help")) {			printHelp();		} else if (commandWord.equals("go")) {			goRoom(command);					} else if (commandWord.equals("quit")) {			if (command.hasSecondWord()) {				System.out.println("Quit what?");			} else {				return true; // signal that we want to quit			}		}		return false;	}	private void printHelp() {		System.out.println("You are lost. You are alone. You wander");		System.out.println("around at Monash Uni, Peninsula Campus.");		System.out.println();		System.out.println("Your command words are:");		System.out.println(parser.showCommands());	}	private void goRoom(Command command) {		if (!command.hasSecondWord()) {			System.out.println("Go where?");		} else {						String direction = command.getSecondWord();				// Try to leave current room.			Room nextRoom = currentRoom.nextRoom(direction);				if (nextRoom == null)				System.out.println("There is no door!");			else {				currentRoom = nextRoom;				System.out.println(currentRoom.longDescription());			}		}	}}
+package ch.bbw.zork;
+
+import java.io.IOException;
+import java.util.*;
+
+/**
+ * Class Game - the main class of the "Zork" game.
+ *
+ * Author:  Michael Kolling, 1.1, March 2000
+ * refactoring: Rinaldo Lanza, September 2020
+ * refactoring: Aaron Holenstein, Januar 2022
+ */
+
+public class Game {
+
+    private final Parser parser;
+    private Inventory inventory;
+    private final World world;
+    private final Scanner scanner;
+
+    WorldMap worldMap = new WorldMap();
+
+    public Game() throws IOException {
+        this.scanner = new Scanner(System.in);
+        Date date = new Date();
+        this.inventory = new Inventory();
+        this.parser = new Parser(this.scanner);
+        this.world = new World(this.scanner);
+    }
+    /**
+     * Main play routine.  Loops until end of play.
+     */
+    public void play() throws IOException {
+
+        printWelcome();
+
+        // Enter the main command loop.  Here we repeatedly read commands and
+        // execute them until the game is over.
+
+        boolean finished = false;
+
+        while (!finished) {
+            Command command = parser.getCommand();
+            if (command == null) {
+                System.out.println("Please enter a valid command");
+                continue;
+            }
+            finished = processCommand(command);
+        }
+        System.out.println("Thank you for playing.  Good bye.");
+    }
+
+    private void printWelcome() {
+        System.out.println();
+        System.out.println("Welcome to Zork!");
+        System.out.println("Zork is a simple adventure game.");
+        System.out.println("Type 'help' if you need help.");
+        System.out.println();
+        System.out.println(this.world.getLongDescription());
+    }
+
+        private boolean processCommand(Command command) throws IOException {
+        if (command.isUnknown()) {
+            System.out.println("I don't know what you mean...");
+            return false;
+        }
+
+        String commandWord = command.getCommandWord();
+
+        switch (commandWord) {
+            case "help":
+                printHelp();
+                break;
+            case "go":
+                this.world.go(command.getSecondWord());
+                break;
+            case "check":
+                checkSomething(command);
+                break;
+            case "take":
+                takeItem(command);
+                break;
+            case "look": // TODO: show room items
+                this.world.look();
+                break;
+            case "drop":
+                dropItem(command);
+                break;
+            case "inspect":
+                this.world.inspect(command);
+                break;
+            case "unlock":
+                if (command.hasSecondWord()) {
+                    this.world.go(command.getSecondWord());
+                } else {
+                    System.out.println("Please specify what you want to unlock");
+                }
+                break;
+            case "quit":
+                if (command.hasSecondWord()) {
+                    System.out.println("Quit what?");
+                } else {
+                    return true; // signal that we want to quit
+                }
+                break;
+        }
+        return false;
+    }
+
+    private void printHelp() {
+        System.out.println("You are one of few survivors of a zombie apocalypse.");
+        System.out.println("You have been bitten by a zombie and are in great need of a remedy.");
+        System.out.println("You currently are in the Umbrella.inc headquarters");
+        System.out.println();
+        System.out.println("Your command words are:");
+        System.out.println(parser.showCommands());
+    }
+
+    private void inventory() {
+        inventory.showInventory();
+    }
+
+
+	private void takeItem(Command command) {
+
+		if (!command.hasSecondWord()) {
+			System.out.println("Take what?");
+		} else {
+			String takenItem = command.getSecondWord();
+			if (this.world.getRooms().getContainer().containsKey(takenItem)) {
+				System.out.println("\nPicked up " + takenItem + "\n");
+				inventory.backpack.put(takenItem, this.world.getRooms().getContainer().get(takenItem));
+				this.world.getRooms().getContainer().remove(takenItem);
+			} else {
+				System.out.println("I can't take that");
+			}
+		}
+	}
+
+	private void dropItem(Command command) {
+        if (!command.hasSecondWord()) {
+            System.out.println("Drop what?");
+        } else {
+            String droppedItem = command.getSecondWord();
+            if (inventory.backpack.containsKey(droppedItem)) {
+                this.world.getRooms().addContainer(droppedItem, inventory.backpack.get(droppedItem));
+                inventory.backpack.remove(droppedItem);
+            } else {
+                System.out.println("I don't have that");
+            }
+        }
+    }
+
+	private void checkSomething(Command command) throws IOException {
+
+		if (!command.hasSecondWord()) {
+			System.out.println("Check what?");
+		} else {
+			String checking = command.getSecondWord();
+			if (checking.equals("backpack")) {
+                inventory.showInventory();
+            } else if (checking.equals("map")) {
+                worldMap.showMap(world.getRooms().getRoomName());
+			} else {
+				System.out.println("I don't know how to check that");
+			}
+		}
+	}
+}
