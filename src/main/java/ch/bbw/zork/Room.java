@@ -4,8 +4,6 @@ package ch.bbw.zork;
  * refactoring: Rinaldo Lanza, September 2020
  */
 
-import java.awt.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -15,7 +13,7 @@ public class Room {
     private final String roomName;
 	private final String description;
 	private final HashMap<String, PointOfInterest> pointsOfInterest;
-	private final HashMap<String, Item> containers;
+	private final HashMap<String, Item> items;
 	private final HashMap<String, Door> exits;
 
 	public Room(String roomName, String description, Boolean container) {
@@ -23,7 +21,7 @@ public class Room {
 	    this.description = description;
 		this.exits = new HashMap<>();
 		this.pointsOfInterest = new HashMap<>();
-		this.containers = new HashMap<>();
+		this.items = new HashMap<>();
 	}
 
 
@@ -36,7 +34,7 @@ public class Room {
     }
 
 	public void addContainer(String name, Item item) {
-		containers.put(name, item);
+		items.put(name, item);
 	}
 
 	public PointOfInterest getPointOfInterest(String name) {
@@ -68,7 +66,7 @@ public class Room {
     }
 
 	public HashMap<String, Item> getContainer() {
-		return containers;
+		return items;
 	}
 
     public void look() {
@@ -77,9 +75,9 @@ public class Room {
             String location = entry.getValue().getLocation();
             System.out.println("A " + entry.getKey() + " " + location);
         }
-        if (!containers.isEmpty()){
+        if (!items.isEmpty()){
             System.out.print("You also see this/these items: ");
-            containers.forEach((k, v) -> System.out.print(" | " + k + " | "));
+            items.forEach((k, v) -> System.out.print(" | " + k + " | "));
             System.out.println();
         } else {
             System.out.println("There are no items here");
