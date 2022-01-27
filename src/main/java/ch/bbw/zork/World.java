@@ -57,16 +57,15 @@ public class World {
         PointOfInterest sign     = new PointOfInterest("The smiling woman will tell you the answer", "next to the east door");
 
         Lock officeLock    = new Lock(knife, "A code based lock. It doesn't seem to be working though. Some of the wires are exposed.");
-        Lock ceoSafeLock   = new Lock("146", "A code based lock. A 3-digit code is required."); //TODO
-        Lock ceoOfficeLock = new Lock("7854", "A code based lock. A 4-digit code is required.");
+        Lock storageLock   = new Lock("146", "A code based lock. A 3-digit code is required."); //TODO
+        Lock ceoOfficeLock = new Lock(boltCutter, "This door is closed with a padlock.");
         Lock labLock       = new Lock(keycard, "A keycard is required to open this door.");
-        Lock storageLock   = new Lock(boltCutter, "There is a locker made out of thick metal wire.\n");//TODO
 
         Door receptionHallway = new Door(null);
         Door hallwayOffice    = new Door(officeLock);
         Door hallwayLobby     = new Door(null);
         Door hallwayLab       = new Door(labLock);
-        Door lobbyStorage     = new Door(null);
+        Door lobbyStorage     = new Door(storageLock);
         Door lobbyCafeteria   = new Door(null);
         Door lobbyCEOOffice   = new Door(ceoOfficeLock);
 
@@ -104,7 +103,7 @@ public class World {
         rooms[1] = new Room[]{office, hallway, lobby, cafeteria};
         rooms[2] = new Room[]{null, lab, ceoOffice};
 
-        lobby.addPointOfInterest("Mona_Lisa", monaLisa);
+        lobby.addPointOfInterest("MonaLisa", monaLisa);
         lobby.addPointOfInterest("Wave", wave);
         lobby.addPointOfInterest("Sign", sign);
         office.addPointOfInterest("Picture", dog);
