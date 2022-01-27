@@ -17,40 +17,38 @@ public class World {
     private int oldY;
     private final Room[][] rooms;
     private final Scanner scanner;
+    private final Player player;
     HashMap<String, Item> allItems = new HashMap<>();
 
-    public World(Scanner scanner) throws IOException {
+    public World(Scanner scanner, Player player) throws IOException {
         this.scanner = scanner;
-        Item key        = new Item("Key", "Just an old rusty key");
-        Item coin       = new Item("Coin", "An ancient looking coin");
-        Item knife      = new Item("Knife", "An old rusty blade");
-        Item picture    = new Item("Picture", "Polaroid of someone from your past");
-        Item keycard    = new Item("Keycard", "A keycard. It probably opens up the exit");
-        Item boltCutter = new Item("BoltCutter", "A boltcutter. Very useful for cutting wire and fences");
+        this.player = player;
+        Item key        = new Item("key", "Just an old rusty key", 0.2);
+        Item knife      = new Item("knife", "An old rusty blade", 0.1);
+        Item keycard    = new Item("keycard", "A keycard. It probably opens up the exit", 1);
+        Item boltCutter = new Item("boltCutter", "A boltcutter. Very useful for cutting wire and fences", 5);
         allItems = new HashMap<String, Item>(Map.of(
                 "key", key,
-                "coin", coin,
-                "knife", knife,
-                "picture", picture
+                "knife", knife
         ));
 
         rooms = new Room[4][3];
         x = 0;
         y = 1;
 
-        Room reception = new Room("reception", "the reception", false);
-        Room lab       = new Room("lab", "lab, where some experiments had taken place", false);
-        Room office    = new Room("office", "big shared office", false);
-        Room ceoOffice = new Room("ceoOffice", "fancy office belonging to the manager", false);
-        Room lobby     = new Room("lobby", "the lobby", false);
-        Room cafeteria = new Room("cafeteria", "the cafeteria", false);
-        Room storage   = new Room("storage", "the storage room", false);
-        Room hallway   = new Room("hallway", "an eerie partially lit hallway", false);
+        Room  reception     = new Room("reception", "the reception", false);
+        Room  lab           = new Room("lab", "lab, where some experiments had taken place", false);
+        Room  office        = new Room("office", "big shared office", false);
+        Room  ceoOffice     = new Room("ceoOffice", "fancy office belonging to the manager", false);
+        Room  lobby         = new Room("lobby", "the lobby", false);
+        Room  cafeteria     = new Room("cafeteria", "the cafeteria", false);
+        Room  storage       = new Room("storage", "the storage room", false);
+        Room  hallway       = new Room("hallway", "an eerie partially lit hallway", false);
         Image monaLisaASCII = new Image("img/monaLisa.txt");
         Image waveASCII     = new Image("img/wave.txt");
         Image dogASCII      = new Image("img/dog.txt");
 
-        Riddle pcRiddle = new Riddle("This PC is locked. A 5-digit password is required", "Kisha", "If your are searching for information,\nthe smliling woman will tell you the answer.");
+        Riddle pcRiddle = new Riddle("KISHA", "This PC is locked. A 5-digit password is required\nEnter password:", "Oth the computer screen there is an open document.\nIt says:\nIf your are searching for information,\nthe smiling woman will tell you the answer.");
 
         PointOfInterest monaLisa = new PointOfInterest(monaLisaASCII.getImage(), "on the north wall");
         PointOfInterest wave     = new PointOfInterest(waveASCII.getImage(), "on the north wall");
@@ -58,10 +56,11 @@ public class World {
         PointOfInterest pc       = new PointOfInterest("The PC is running but a password is required\nYou can interact with this object", "on one of the desks", pcRiddle);
         PointOfInterest sign     = new PointOfInterest("The smiling woman will tell you the answer", "next to the east door");
 
-        Lock officeLock  = new Lock(knife, "A code based lock.It doesn't seem to be working though. Some of the wires are exposed.");
-        Lock ceoSafeLock = new Lock("146", "A code based lock. A 3-digit code is required.");
+        Lock officeLock    = new Lock(knife, "A code based lock. It doesn't seem to be working though. Some of the wires are exposed.");
+        Lock ceoSafeLock   = new Lock("146", "A code based lock. A 3-digit code is required."); //TODO
         Lock ceoOfficeLock = new Lock("7854", "A code based lock. A 4-digit code is required.");
-        Lock labLock     = new Lock(keycard, "A keycard is required to open this door.");
+        Lock labLock       = new Lock(keycard, "A keycard is required to open this door.");
+        Lock storageLock   = new Lock(boltCutter, "There is a locker made out of thick metal wire.\n");//TODO
 
         Door receptionHallway = new Door(null);
         Door hallwayOffice    = new Door(officeLock);
@@ -98,8 +97,8 @@ public class World {
         */
 
         cafeteria.addContainer("knife", knife);
-        ceoOffice.addContainer("keycard", keycard);
-//        reception.addContainer("boltcutter", boltCutter);
+        ceoOffice.addContainer("keycard", keycard); //TODO put inside safe
+        storage.addContainer("boltcutter", boltCutter);
 
         rooms[0] = new Room[]{null, reception, storage};
         rooms[1] = new Room[]{office, hallway, lobby, cafeteria};
@@ -227,10 +226,10 @@ public class World {
                         System.out.println("That didn't work.\nYou will have to try something else");
                     }
                 } else {
-                    System.out.println("Please select the item you want to use");
-                    Inventory.showInventory();
+                    System.out.println(this.rooms[this.x][this.y].getExit(direction).getDescription() + "\nPlease select the item you want to use to try and open the door");
+                    this.player.showInventory();
                     String chosenItem = scanner.nextLine();
-                    Item   key        = Inventory.getItem(chosenItem);
+                    Item   key        = this.player.getItem(chosenItem);
                     if (this.rooms[this.x][this.y].unlock(direction, key)) {
                         System.out.println("You used the " + chosenItem + " to open the door.");
                         this.oldX = this.x;

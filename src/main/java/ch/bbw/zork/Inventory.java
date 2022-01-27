@@ -8,13 +8,20 @@ import java.util.HashMap;
 
 public class Inventory {
 
-    public static HashMap<String, Item> backpack = new HashMap<String, Item>();
+    private final HashMap<String, Item> backpack = new HashMap<String, Item>();
 
-    public static Item getItem(String itemName){
+    public Item getItem(String itemName){
         return backpack.get(itemName);
     }
+    public boolean hasItem(String itemName){
+        return this.backpack.containsKey(itemName);
+    }
 
-    public static void showInventory(){
+    public void addItem(String itemName, Item item) {
+        this.backpack.put(itemName, item);
+    }
+
+    public void showInventory(){
         System.out.println("+---------------+----------------------------------------------------+");
         System.out.println("|   Item Name   |                 Item Description                   |");
         System.out.println("+---------------+----------------------------------------------------+");
@@ -26,4 +33,7 @@ public class Inventory {
         System.out.println("Entries:" + backpack.size());
     }
 
+    public void dropItem(String itemName) {
+        this.backpack.remove(itemName);
+    }
 }

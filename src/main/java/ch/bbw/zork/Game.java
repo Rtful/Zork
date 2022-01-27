@@ -14,8 +14,8 @@ import java.util.*;
 public class Game {
 
     private final Parser parser;
-    private Inventory inventory;
     private final World world;
+    private final Player player;
     private final Scanner scanner;
 
     WorldMap worldMap = new WorldMap();
@@ -23,9 +23,9 @@ public class Game {
     public Game() throws IOException {
         this.scanner = new Scanner(System.in);
         Date date = new Date();
-        this.inventory = new Inventory();
+        this.player = new Player();
         this.parser = new Parser(this.scanner);
-        this.world = new World(this.scanner);
+        this.world = new World(this.scanner, this.player);
     }
     /**
      * Main play routine.  Loops until end of play.
@@ -49,6 +49,8 @@ public class Game {
             finished = processCommand(command);
             if (Arrays.equals(this.world.getCoordinates(), new int[]{2, 1})) {
                 won = true;
+            } else if(Objects.equals(command.getCommandWord(), "go") && Arrays.equals(this.world.getCoordinates(), new int[]{0, 2})) {
+                System.out.println("The window is open, brrrrr");
             }
         }
         if (won){
@@ -130,13 +132,8 @@ public class Game {
         System.out.println("You currently are in the Umbrella.inc headquarters");
         System.out.println();
         System.out.println("Your command words are:");
-        System.out.println(parser.showCommands());
+        System.out.println(this.parser.showCommands());
     }
-
-    private void inventory() {
-        inventory.showInventory();
-    }
-
 
 	private void takeItem(Command command) {
 
@@ -146,7 +143,7 @@ public class Game {
 			String takenItem = command.getSecondWord();
 			if (this.world.getCurrentRoom().getContainer().containsKey(takenItem)) {
 				System.out.println("\nPicked up " + takenItem + "\n");
-				inventory.backpack.put(takenItem, this.world.getCurrentRoom().getContainer().get(takenItem));
+				this.player.takeItem(takenItem, this.world.getCurrentRoom().getContainer().get(takenItem));
 				this.world.getCurrentRoom().getContainer().remove(takenItem);
 			} else {
 				System.out.println("I can't take that");
@@ -159,9 +156,9 @@ public class Game {
             System.out.println("Drop what?");
         } else {
             String droppedItem = command.getSecondWord();
-            if (inventory.backpack.containsKey(droppedItem)) {
-                this.world.getRooms().addContainer(droppedItem, inventory.backpack.get(droppedItem));
-                inventory.backpack.remove(droppedItem);
+            if (this.player.hasItem(droppedItem)) {
+                this.world.getCurrentRoom().addContainer(droppedItem, this.player.getItem(droppedItem));
+                this.player.dropItem(droppedItem);
             } else {
                 System.out.println("I don't have that");
             }
@@ -175,9 +172,9 @@ public class Game {
 		} else {
 			String checking = command.getSecondWord();
 			if (checking.equals("backpack")) {
-                inventory.showInventory();
+                this.player.showInventory();
             } else if (checking.equals("map")) {
-                worldMap.showMap(world.getRooms().getRoomName());
+                worldMap.showMap(world.getCurrentRoom().getRoomName());
 			} else {
 				System.out.println("I don't know how to check that");
 			}
