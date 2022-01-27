@@ -8,10 +8,13 @@ import java.util.HashMap;
 
 public class Inventory {
 
-    public HashMap<String, Item> backpack = new HashMap<>();
+    public static HashMap<String, Item> backpack = new HashMap<String, Item>();
 
+    public static Item getItem(String itemName){
+        return backpack.get(itemName);
+    }
 
-    public void showInventory(){
+    public static void showInventory(){
         System.out.println("+---------------+----------------------------------------------------+");
         System.out.println("|   Item Name   |                 Item Description                   |");
         System.out.println("+---------------+----------------------------------------------------+");

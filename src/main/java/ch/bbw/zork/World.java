@@ -184,11 +184,27 @@ public class World {
                 if (Objects.equals(this.rooms[this.x][this.y].getExit(direction).getLockType(), "code")) {
                     System.out.println("Please enter a code");
                     String code = scanner.nextLine();
-                    this.rooms[this.x][this.y].unlock(direction, code);
+                    if (this.rooms[this.x][this.y].unlock(direction, code)) {
+                        System.out.println("You entered the correct combination and the door opened.");
+                        this.x = newX;
+                        this.y = newY;
+                        System.out.println(rooms[this.x][this.y].getLongDescription());
+                    } else {
+                        System.out.println("That didn't work.\nYou will have to try something else");
+                    }
                 } else {
                     System.out.println("Please select the item you want to use");
+                    Inventory.showInventory();
                     String chosenItem = scanner.nextLine();
-//                    this.rooms[this.x][this.y].unlock(direction, code);
+                    Item   key        = Inventory.getItem(chosenItem);
+                    if (this.rooms[this.x][this.y].unlock(direction, key)) {
+                        System.out.println("You used the " + chosenItem + " to open the door.");
+                        this.x = newX;
+                        this.y = newY;
+                        System.out.println(rooms[this.x][this.y].getLongDescription());
+                    } else {
+                        System.out.println("That didn't work.\nYou will have to try something else");
+                    }
                 }
             }
         }
