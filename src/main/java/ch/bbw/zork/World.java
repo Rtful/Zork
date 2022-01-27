@@ -34,14 +34,14 @@ public class World {
         x = 0;
         y = 1;
 
-        Room reception = new Room("the reception", false);
-        Room lab       = new Room("lab, where some experiments had taken place", false);
-        Room office    = new Room("big shared office", false);
-        Room ceoOffice = new Room("fancy office belonging to the manager", false);
-        Room lobby     = new Room("the lobby", false);
-        Room cafeteria = new Room("the cafeteria", false);
-        Room storage   = new Room("the storage room", false);
-        Room hallway   = new Room("an eerie partially lit hallway", false);
+        Room reception = new Room("reception", "the reception", false);
+        Room lab       = new Room("lab", "lab, where some experiments had taken place", false);
+        Room office    = new Room("office", "big shared office", false);
+        Room ceoOffice = new Room("ceoOffice", "fancy office belonging to the manager", false);
+        Room lobby     = new Room("lobby", "the lobby", false);
+        Room cafeteria = new Room("cafeteria", "the cafeteria", false);
+        Room storage   = new Room("storage", "the storage room", false);
+        Room hallway   = new Room("hallway", "an eerie partially lit hallway", false);
 
         Lock officeLock = new Lock(knife, "A code based lock. Some of the wires are exposed.");
 
